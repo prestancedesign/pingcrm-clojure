@@ -3,6 +3,7 @@
             [inertia.middleware :as inertia]
             [pingcrm.db :as db]
             [pingcrm.templates.404 :as error]
+            [pingcrm.users.handlers :as users]
             [reitit.ring :as ring]
             [reitit.ring.middleware.parameters :as params]
             [ring.adapter.jetty :as server]
@@ -38,12 +39,6 @@
 (defn reports [_]
   (inertia/render "Reports/Index"))
 
-(defn users [{:keys [params]}]
-  (let [filters (select-keys params [:search :role :trashed])
-        props {:users (db/retrieve-and-filter-users filters)
-               :filters filters}]
-    (inertia/render "Users/Index" props)))
-
 (defn error []
   "trigger error")
 
@@ -51,8 +46,11 @@
   (ring/ring-handler
    (ring/router
     [["/" {:get {:handler #'index}}]
-     ["/users" {:get {:handler #'users
-                      :parameters {:query {:search int?}}}}]
+     ["/users"
+      ["" {:get {:handler #'users/get-users
+                 :parameters {:query {:search int?}}}}]
+      ["/:user-id/edit" {:get {:handler #'users/edit-user
+                               :parameters {:query {:user-id int?}}}}]]
      ["/reports" {:get {:handler #'reports}}]])
    (ring/routes
     (ring/create-resource-handler {:path "/"})
