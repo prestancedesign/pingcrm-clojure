@@ -9,12 +9,15 @@
 
 (def db (jdbc/with-options ds {:builder-fn rs/as-unqualified-maps}))
 
+(defn search-filter-regex [column-name pattern]
+  [:like column-name (str "%" pattern "%")])
+
 (defn retrieve-and-filter-users
   [filters]
   (let [search-filter (when-let [search (:search filters)]
-                        [:or [:like :first_name (str "%" search "%")]
-                         [:like :last_name (str "%" search "%")]
-                         [:like :email (str "%" search "%")]])
+                        [:or (search-filter-regex :first_name search)
+                         (search-filter-regex :last_name search)
+                         (search-filter-regex :email search)])
         role-filter (when-let [role (:role filters)]
                       (case role
                         "owner" [:= :owner true]
