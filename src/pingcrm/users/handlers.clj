@@ -16,7 +16,8 @@
 (defn update-user! [req]
   (let [id (-> req :path-params :user-id)
         url (str (-> req :uri) "/edit")
-        _ (println req)
-        user-form (select-keys (:body-params req) [:first_name :last_name :email :owner])]
-    (db/update-user! user-form id)
-    (rr/redirect url :see-other)))
+        user-form (select-keys (:body-params req) [:first_name :last_name :email :owner])
+        user-updated? (db/update-user! user-form id)]
+    (when user-updated?
+      (-> (rr/redirect url :see-other)
+          (assoc :flash {:success "User updated."})))))
