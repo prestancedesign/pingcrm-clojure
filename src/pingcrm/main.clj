@@ -21,7 +21,7 @@
     [:title "PingCRM Inertia Clojure"]
     (page/include-css "/css/app.css")
     [:script {:src "/js/ziggy.js"}]
-    [:script {:src "js/app.js" :defer true}]]
+    [:script {:src "/js/app.js" :defer true}]]
    [:body.font-sans.leading-none.text-gray-700.antialiased
     [:div {:id "app"
            :data-page data-page}]]))
