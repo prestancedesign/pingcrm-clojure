@@ -1,6 +1,7 @@
 (ns pingcrm.users.handlers
   (:require [inertia.middleware :as inertia]
-            [pingcrm.db :as db]))
+            [pingcrm.db :as db]
+            [ring.util.response :as rr]))
 
 (defn get-users [{:keys [params]}]
   (let [filters (select-keys params [:search :role :trashed])
@@ -8,6 +9,14 @@
                :filters filters}]
     (inertia/render "Users/Index" props)))
 
-(defn edit-user [{:keys [path-params]}]
+(defn edit-user! [{:keys [path-params]}]
   (let [props {:user (db/get-user-by-id (:user-id path-params))}]
     (inertia/render "Users/Edit" props)))
+
+(defn update-user! [req]
+  (let [id (-> req :path-params :user-id)
+        url (str (-> req :uri) "/edit")
+        _ (println req)
+        user-form (select-keys (:body-params req) [:first_name :last_name :email :owner])]
+    (db/update-user! user-form id)
+    (rr/redirect url :see-other)))

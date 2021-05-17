@@ -49,7 +49,12 @@
      ["/users"
       ["" {:get {:handler #'users/get-users
                  :parameters {:query {:search int?}}}}]
-      ["/:user-id/edit" {:get {:handler #'users/edit-user
+      ["/:user-id" {:post {:handler #'users/update-user!
+                           :parameters {:body {:first_name string?
+                                               :last_name string?
+                                               :email string?
+                                               :owner boolean?}}}}]
+      ["/:user-id/edit" {:get {:handler #'users/edit-user!
                                :parameters {:query {:user-id int?}}}}]]
      ["/reports" {:get {:handler #'reports}}]])
    (ring/routes

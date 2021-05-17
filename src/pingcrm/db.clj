@@ -35,11 +35,17 @@
 
 (defn get-user-by-id
   [id]
+  ;;TODO: Use with-open for better performance
   (let [user (sql/get-by-id db :users id)
         account (sql/get-by-id db :accounts id {:columns [:id :name]})]
     (assoc user :account account)))
 
+(defn update-user!
+  [user id]
+  (sql/update! db :users user {:id id}))
+
 (comment
+  (sql/get-by-id db :users 1)
 
   (retrieve-and-filter-users {:search nil})
 
