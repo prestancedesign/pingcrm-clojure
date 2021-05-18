@@ -9,6 +9,13 @@
 
 (def db (jdbc/with-options ds {:builder-fn rs/as-unqualified-maps}))
 
+(extend-protocol rs/ReadableColumn
+  Integer
+  (read-column-by-index [x mrs i]
+    (if (= (.getColumnName mrs i) "owner")
+      (not (zero? x))
+      x)))
+
 (defn search-filter-regex [column-name pattern]
   [:like column-name (str "%" pattern "%")])
 
