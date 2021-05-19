@@ -44,8 +44,13 @@
   [id]
   ;;TODO: Use with-open for better performance
   (let [user (sql/get-by-id db :users id)
-        account (sql/get-by-id db :accounts id {:columns [:id :name]})]
+        account-id (:account_id user)
+        account (sql/get-by-id db :accounts account-id {:columns [:id :name]})]
     (assoc user :account account)))
+
+(defn get-user-by-email
+  [email]
+  (sql/get-by-id db :users email :email {}))
 
 (defn update-user!
   [user id]
@@ -53,6 +58,8 @@
 
 (comment
   (sql/get-by-id db :users 1)
+
+  (get-user-by-email "johndoe@example.com")
 
   (retrieve-and-filter-users {:search nil})
 

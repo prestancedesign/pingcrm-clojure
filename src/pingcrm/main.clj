@@ -1,5 +1,8 @@
 (ns pingcrm.main
-  (:require [hiccup.page :as page]
+  (:require [buddy.auth :as buddy-auth]
+            [buddy.auth.backends :as backends]
+            [buddy.auth.middleware :as bam]
+            [hiccup.page :as page]
             [inertia.middleware :as inertia]
             [pingcrm.db :as db]
             [pingcrm.templates.404 :as error]
@@ -10,9 +13,16 @@
             [ring.middleware.flash :refer [wrap-flash]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.session :refer [wrap-session]]
-            [ring.middleware.session.memory :refer [memory-store]]))
+            [ring.middleware.session.memory :refer [memory-store]]
+            [ring.util.response :as rr]
+            [reitit.dev.pretty :as pretty]
+            [crypto.password.bcrypt :as password]))
 
 (def asset-version "1")
+
+(def backend (backends/session))
+
+(defonce session-store (atom {}))
 
 (defn template [data-page]
   (page/html5
@@ -29,9 +39,27 @@
     [:div {:id "app"
            :data-page data-page}]]))
 
+(defn login-authenticate
+  "Check request username and password against authdata
+  username and passwords."
+  [request]
+  (let [email (-> request :body-params :email)
+        password (-> request :body-params :password)
+        user (db/get-user-by-email email)
+        session (:session request)]
+    (when (and user (password/check password (:password user)))
+      (let [updated-session (assoc session :identity (dissoc user :password))]
+        (-> (rr/redirect "/")
+            (assoc :session updated-session))))))
+
+(defn logout [_]
+  (-> (rr/redirect "/" :see-other)
+      (assoc :session nil)))
+
 (defn wrap-inertia-share [handler]
   (fn [request]
-    (let [user (db/get-user-by-id 1)
+    (let [user-id (-> request :session :identity :id)
+          user (db/get-user-by-id user-id)
           success (-> request :flash :success)
           props {:errors {}
                  :auth {:user user}
@@ -39,17 +67,26 @@
                          :error nil}}]
       (handler (assoc request :inertia-share props)))))
 
-(defn index [_]
-  (inertia/render "Dashboard/Index"))
-
-(defn reports [_]
-  (inertia/render "Reports/Index"))
+(defn auth-middleware
+  "Middleware used in routes that require authentication. If request is
+  not authenticated a redirect on login page will be executed."
+  [handler]
+  (fn [request]
+    (if (buddy-auth/authenticated? request)
+      (handler request)
+      (rr/redirect "/login"))))
 
 (def app
   (ring/ring-handler
    (ring/router
-    [["/" {:get {:handler #'index}}]
-     ["/users"
+    [["/login"
+      {:get (fn [_] (inertia/render "Auth/Login"))
+       :post {:handler #'login-authenticate}}]
+     ["/logout"
+      {:delete {:handler #'logout}}]
+     ["/" {:get (fn [_] (inertia/render "Dashboard/Index"))
+           :middleware [auth-middleware]}]
+     ["/users" {:middleware [auth-middleware]}
       [""
        {:get {:handler    #'users/get-users
               :parameters {:query {:search int?}}}}]
@@ -61,12 +98,14 @@
                                    :owner      boolean?}}}}]
       ["/:user-id/edit"
        {:get {:handler    #'users/edit-user!
-              :parameters {:query {:user-id int?}}}}]]
-     ["/reports" {:get {:handler #'reports}}]]
-    {:data {:middleware [params/parameters-middleware
+              :parameters {:path {:user-id int?}}}}]]
+     ["/reports" (fn [_] (inertia/render "Reports/Index"))]]
+    {:exception pretty/exception
+     :data {:middleware [params/parameters-middleware
                          wrap-keyword-params
-                         [wrap-session {:store (memory-store)}]
+                         [wrap-session {:store (memory-store session-store)}]
                          wrap-flash
+                         [bam/wrap-authentication backend]
                          wrap-inertia-share
                          [inertia/wrap-inertia template asset-version]]}})
    (ring/routes
