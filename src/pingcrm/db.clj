@@ -56,13 +56,10 @@
   [user id]
   (sql/update! db :users user {:id id}))
 
-(comment
-  (sql/get-by-id db :users 1)
+(defn soft-delete-user!
+  [id]
+  (sql/update! db :users {:deleted_at (java.util.Date.)} {:id id}))
 
-  (get-user-by-email "johndoe@example.com")
-
-  (retrieve-and-filter-users {:search nil})
-
-  (retrieve-and-filter-users {:search "Jo"})
-
-  (get-user-by-id 1))
+(defn restore-deleted-user!
+  [id]
+  (sql/update! db :users {:deleted_at nil} {:id id}))

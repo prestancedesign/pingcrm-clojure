@@ -21,3 +21,19 @@
     (when user-updated?
       (-> (rr/redirect url :see-other)
           (assoc :flash {:success "User updated."})))))
+
+(defn delete-user! [req]
+  (let [id (-> req :path-params :user-id)
+        back (get (:headers req) "referer")
+        user-deleted? (db/soft-delete-user! id)]
+    (when user-deleted?
+      (-> (rr/redirect back :see-other)
+          (assoc :flash {:success "User deleted."})))))
+
+(defn restore-user! [req]
+  (let [id (-> req :path-params :user-id)
+        back (get (:headers req) "referer")
+        user-restored? (db/restore-deleted-user! id)]
+    (when user-restored?
+      (-> (rr/redirect back :see-other)
+          (assoc :flash {:success "User restored."})))))

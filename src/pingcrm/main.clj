@@ -80,34 +80,39 @@
   (ring/ring-handler
    (ring/router
     [["/login"
-      {:get (fn [_] (inertia/render "Auth/Login"))
+      {:get  (fn [_] (inertia/render "Auth/Login"))
        :post {:handler #'login-authenticate}}]
      ["/logout"
       {:delete {:handler #'logout}}]
-     ["/" {:get (fn [_] (inertia/render "Dashboard/Index"))
+     ["/" {:get        (fn [_] (inertia/render "Dashboard/Index"))
            :middleware [auth-middleware]}]
      ["/users" {:middleware [auth-middleware]}
       [""
        {:get {:handler    #'users/get-users
               :parameters {:query {:search int?}}}}]
       ["/:user-id"
-       {:post {:handler    #'users/update-user!
-               :parameters {:body {:first_name string?
-                                   :last_name  string?
-                                   :email      string?
-                                   :owner      boolean?}}}}]
+       {:post   {:handler    #'users/update-user!
+                 :parameters {:body {:first_name string?
+                                     :last_name  string?
+                                     :email      string?
+                                     :owner      boolean?}}}
+        :delete {:handler    #'users/delete-user!
+                 :parameters {:query {:user-id string?}}}}]
       ["/:user-id/edit"
        {:get {:handler    #'users/edit-user!
+              :parameters {:path {:user-id int?}}}}]
+      ["/:user-id/restore"
+       {:put {:handler    #'users/restore-user!
               :parameters {:path {:user-id int?}}}}]]
      ["/reports" (fn [_] (inertia/render "Reports/Index"))]]
     {:exception pretty/exception
-     :data {:middleware [params/parameters-middleware
-                         wrap-keyword-params
-                         [wrap-session {:store (memory-store session-store)}]
-                         wrap-flash
-                         [bam/wrap-authentication backend]
-                         wrap-inertia-share
-                         [inertia/wrap-inertia template asset-version]]}})
+     :data      {:middleware [params/parameters-middleware
+                              wrap-keyword-params
+                              [wrap-session {:store (memory-store session-store)}]
+                              wrap-flash
+                              [bam/wrap-authentication backend]
+                              wrap-inertia-share
+                              [inertia/wrap-inertia template asset-version]]}})
    (ring/routes
     (ring/create-resource-handler {:path "/"})
     (ring/create-default-handler
