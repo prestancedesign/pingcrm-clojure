@@ -2,11 +2,14 @@
   (:require [buddy.auth :as buddy-auth]
             [buddy.auth.backends :as backends]
             [buddy.auth.middleware :as bam]
+            [crypto.password.bcrypt :as password]
             [hiccup.page :as page]
             [inertia.middleware :as inertia]
             [pingcrm.db :as db]
             [pingcrm.templates.404 :as error]
             [pingcrm.users.handlers :as users]
+            [reitit.coercion.spec :as spec-coercion]
+            [reitit.dev.pretty :as pretty]
             [reitit.ring :as ring]
             [reitit.ring.middleware.parameters :as params]
             [ring.adapter.jetty :as server]
@@ -14,9 +17,7 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.session.memory :refer [memory-store]]
-            [ring.util.response :as rr]
-            [reitit.dev.pretty :as pretty]
-            [crypto.password.bcrypt :as password]))
+            [ring.util.response :as rr]))
 
 (def asset-version "1")
 
@@ -46,9 +47,10 @@
   (let [email (-> request :body-params :email)
         password (-> request :body-params :password)
         user (db/get-user-by-email email)
+        sanitized-user (dissoc user :password)
         session (:session request)]
     (when (and user (password/check password (:password user)))
-      (let [updated-session (assoc session :identity (dissoc user :password))]
+      (let [updated-session (assoc session :identity sanitized-user)]
         (-> (rr/redirect "/")
             (assoc :session updated-session))))))
 
@@ -84,28 +86,27 @@
        :post {:handler #'login-authenticate}}]
      ["/logout"
       {:delete {:handler #'logout}}]
-     ["/" {:get        (fn [_] (inertia/render "Dashboard/Index"))
-           :middleware [auth-middleware]}]
+     ["/"
+      {:get        (fn [_] (inertia/render "Dashboard/Index"))
+       :middleware [auth-middleware]}]
      ["/users" {:middleware [auth-middleware]}
       [""
-       {:get {:handler    #'users/get-users
-              :parameters {:query {:search int?}}}}]
+       {:get  {:handler    #'users/get-users}
+        :post {:handler #'users/create-user!}}]
+      ["/create"
+       {:get        (fn [_] (inertia/render "Users/Create"))
+        :middleware [auth-middleware]}]
       ["/:user-id"
-       {:post   {:handler    #'users/update-user!
-                 :parameters {:body {:first_name string?
-                                     :last_name  string?
-                                     :email      string?
-                                     :owner      boolean?}}}
-        :delete {:handler    #'users/delete-user!
-                 :parameters {:query {:user-id string?}}}}]
+       {:post   {:handler #'users/update-user!}
+        :delete {:handler #'users/delete-user!}}]
       ["/:user-id/edit"
-       {:get {:handler    #'users/edit-user!
-              :parameters {:path {:user-id int?}}}}]
+       {:get {:handler #'users/edit-user!}}]
       ["/:user-id/restore"
-       {:put {:handler    #'users/restore-user!
-              :parameters {:path {:user-id int?}}}}]]
+       {:put {:handler #'users/restore-user!}}]]
      ["/reports" (fn [_] (inertia/render "Reports/Index"))]]
     {:exception pretty/exception
+     :conflicts nil
+     :coercion  spec-coercion/coercion
      :data      {:middleware [params/parameters-middleware
                               wrap-keyword-params
                               [wrap-session {:store (memory-store session-store)}]

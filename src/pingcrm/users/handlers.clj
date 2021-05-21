@@ -1,5 +1,6 @@
 (ns pingcrm.users.handlers
-  (:require [inertia.middleware :as inertia]
+  (:require [crypto.password.bcrypt :as password]
+            [inertia.middleware :as inertia]
             [pingcrm.db :as db]
             [ring.util.response :as rr]))
 
@@ -8,6 +9,16 @@
         props {:users (db/retrieve-and-filter-users filters)
                :filters filters}]
     (inertia/render "Users/Index" props)))
+
+(defn create-user!
+  [req]
+  (let [account-id (-> req :identity :account_id)
+        user (-> req :body-params)
+        encrypted-user (update user :password password/encrypt)
+        user-created? (db/insert-user! (assoc encrypted-user :account_id account-id))]
+    (when user-created?
+      (-> (rr/redirect "/users")
+          (assoc :flash {:success "User created."})))))
 
 (defn edit-user! [{:keys [path-params]}]
   (let [props {:user (db/get-user-by-id (:user-id path-params))}]

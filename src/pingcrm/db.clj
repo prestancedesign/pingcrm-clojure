@@ -3,7 +3,8 @@
             [honey.sql.helpers :as helpers]
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
-            [next.jdbc.sql :as sql]))
+            [next.jdbc.sql :as sql]
+            [clojure.set :as set]))
 
 (def ds (jdbc/get-datasource {:dbtype "sqlite" :dbname "database/database.sqlite"}))
 
@@ -16,15 +17,12 @@
       (not (zero? x))
       x)))
 
-(defn search-filter-regex [column-name pattern]
-  [:like column-name (str "%" pattern "%")])
-
 (defn retrieve-and-filter-users
   [filters]
   (let [search-filter (when-let [search (:search filters)]
-                        [:or (search-filter-regex :first_name search)
-                         (search-filter-regex :last_name search)
-                         (search-filter-regex :email search)])
+                        [:or [:like :first_name (str "%" search "%")]
+                         [:like :last_name (str "%" search "%")]
+                         [:like :email (str "%" search "%")]])
         role-filter (when-let [role (:role filters)]
                       (case role
                         "owner" [:= :owner true]
@@ -52,14 +50,34 @@
   [email]
   (sql/get-by-id db :users email :email {}))
 
+(defn insert-user!
+  [user]
+  (let [user (set/rename-keys user {:photo :photo_path})
+        query (h/format{:insert-into :users
+                             :values [(merge user {:created_at :current_timestamp
+                                                   :updated_at :current_timestamp})]})]
+    (jdbc/execute-one! db query)))
+
 (defn update-user!
   [user id]
   (sql/update! db :users user {:id id}))
 
 (defn soft-delete-user!
   [id]
-  (sql/update! db :users {:deleted_at (java.util.Date.)} {:id id}))
+  (let [query (h/format {:update :users
+                         :set {:deleted_at :current_timestamp
+                               :updated_at :current_timestamp}
+                         :where [:= :id id]})]
+    (jdbc/execute-one! db query)))
 
 (defn restore-deleted-user!
   [id]
-  (sql/update! db :users {:deleted_at nil} {:id id}))
+  (let [query (h/format {:update :users
+                         :set {:deleted_at nil
+                               :updated_at :current_timestamp}
+                         :where [:= :id id]})]
+    (jdbc/execute-one! db query)))
+
+(comment
+
+  (sql/delete! db :users {:email "tone.tonydeaf@gmail.com"}))
