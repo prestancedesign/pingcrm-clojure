@@ -32,31 +32,31 @@
                        [bam/wrap-authentication backend]
                        wrap-inertia-share
                        [inertia/wrap-inertia template asset-version]]}})
-(def routes
+(defn routes [db]
   (ring/ring-handler
    (ring/router
     [["/login"
       {:get  (fn [_] (inertia/render "Auth/Login"))
-       :post {:handler #'auth/login-authenticate}}]
+       :post {:handler auth/login-authenticate}}]
      ["/logout"
-      {:delete {:handler #'auth/logout}}]
+      {:delete {:handler auth/logout}}]
      ["/"
       {:get        (fn [_] (inertia/render "Dashboard/Index"))
        :middleware [wrap-auth]}]
      ["/users" {:middleware [wrap-auth]}
       [""
-       {:get  {:handler #'users/get-users}
-        :post {:handler #'users/create-user!}}]
+       {:get  {:handler users/get-users}
+        :post {:handler users/create-user!}}]
       ["/create"
        {:get        (fn [_] (inertia/render "Users/Create"))
         :middleware [wrap-auth]}]
       ["/:user-id"
-       {:post   {:handler #'users/update-user!}
-        :delete {:handler #'users/delete-user!}}]
+       {:post   {:handler users/update-user!}
+        :delete {:handler users/delete-user!}}]
       ["/:user-id/edit"
-       {:get {:handler #'users/edit-user!}}]
+       {:get {:handler users/edit-user!}}]
       ["/:user-id/restore"
-       {:put {:handler #'users/restore-user!}}]]
+       {:put {:handler users/restore-user!}}]]
      ["/reports" (fn [_] (inertia/render "Reports/Index"))]]
     config)
    (ring/routes
