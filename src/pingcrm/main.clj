@@ -63,7 +63,8 @@
     (let [user-id (-> request :session :identity :id)
           user (db/get-user-by-id user-id)
           success (-> request :flash :success)
-          props {:errors {}
+          errors (-> request :flash :error)
+          props {:errors (or errors {})
                  :auth {:user user}
                  :flash {:success success
                          :error nil}}]
