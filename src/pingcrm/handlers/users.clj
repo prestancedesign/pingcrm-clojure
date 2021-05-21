@@ -1,7 +1,7 @@
-(ns pingcrm.users.handlers
+(ns pingcrm.handlers.users
   (:require [crypto.password.bcrypt :as password]
             [inertia.middleware :as inertia]
-            [pingcrm.db :as db]
+            [pingcrm.models.users :as db]
             [ring.util.response :as rr]
             [struct.core :as st]))
 

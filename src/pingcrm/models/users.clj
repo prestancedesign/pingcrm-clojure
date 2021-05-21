@@ -1,4 +1,4 @@
-(ns pingcrm.db
+(ns pingcrm.models.users
   (:require [honey.sql :as h]
             [honey.sql.helpers :as helpers]
             [next.jdbc :as jdbc]
