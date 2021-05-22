@@ -1,7 +1,11 @@
 (ns pingcrm.handlers.auth
   (:require [crypto.password.bcrypt :as password]
+            [inertia.middleware :as inertia]
             [pingcrm.models.users :as db]
             [ring.util.response :as rr]))
+
+(defn login [_]
+  (inertia/render "Auth/Login"))
 
 (defn login-authenticate
   "Check request username and password against authdata

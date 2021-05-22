@@ -3,11 +3,13 @@
             [buddy.auth.middleware :as bam]
             [inertia.middleware :as inertia]
             [pingcrm.handlers.auth :as auth]
+            [pingcrm.handlers.dashboard :as dashboard]
+            [pingcrm.handlers.reports :as reports]
+            [pingcrm.handlers.users :as users]
             [pingcrm.middleware.auth :refer [wrap-auth]]
             [pingcrm.middleware.inertia :refer [wrap-inertia-share]]
             [pingcrm.templates.404 :as error]
             [pingcrm.templates.app :refer [template]]
-            [pingcrm.handlers.users :as users]
             [reitit.dev.pretty :as pretty]
             [reitit.ring :as ring]
             [reitit.ring.middleware.parameters :as params]
@@ -36,19 +38,19 @@
   (ring/ring-handler
    (ring/router
     [["/login"
-      {:get  (fn [_] (inertia/render "Auth/Login"))
+      {:get  auth/login
        :post {:handler auth/login-authenticate}}]
      ["/logout"
       {:delete {:handler auth/logout}}]
      ["/"
-      {:get        (fn [_] (inertia/render "Dashboard/Index"))
+      {:get        dashboard/index
        :middleware [wrap-auth]}]
      ["/users" {:middleware [wrap-auth]}
       [""
        {:get  {:handler users/get-users}
-        :post {:handler users/create-user!}}]
+        :post {:handler users/store-user!}}]
       ["/create"
-       {:get        (fn [_] (inertia/render "Users/Create"))
+       {:get        users/user-form
         :middleware [wrap-auth]}]
       ["/:user-id"
        {:post   {:handler users/update-user!}
