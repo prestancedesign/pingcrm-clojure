@@ -1,6 +1,7 @@
 (ns pingcrm.system
   (:require [integrant.core :as ig]
             [next.jdbc :as jdbc]
+            [next.jdbc.result-set :as rs]
             [pingcrm.router :as router]
             [ring.adapter.jetty :as server]))
 
@@ -19,9 +20,10 @@
 (defmethod ig/init-key :pingcrm/app [_ {:keys [db]}]
   (app db))
 
-(defmethod ig/init-key :database.sql/connection [_ {:keys [jdbc-url]}]
-  (println "\nConfigured db")
-  (jdbc/with-options jdbc-url jdbc/snake-kebab-opts))
+(defmethod ig/init-key :database.sql/connection [_ db-spec]
+  (println db-spec)
+  (let [ds (jdbc/get-datasource db-spec)]
+    (jdbc/with-options ds {:builder-fn rs/as-unqualified-maps})))
 
 (defmethod ig/halt-key! :server/jetty [_ server]
   (.stop server))
