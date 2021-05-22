@@ -4,6 +4,7 @@
             [inertia.middleware :as inertia]
             [pingcrm.handlers.auth :as auth]
             [pingcrm.handlers.dashboard :as dashboard]
+            [pingcrm.handlers.organizations :as organizations]
             [pingcrm.handlers.reports :as reports]
             [pingcrm.handlers.users :as users]
             [pingcrm.middleware.auth :refer [wrap-auth]]
@@ -59,7 +60,10 @@
        {:get {:handler users/edit-user!}}]
       ["/:user-id/restore"
        {:put {:handler users/restore-user!}}]]
-     ["/reports" (fn [_] (inertia/render "Reports/Index"))]]
+     ["/organizations" {:middleware [wrap-auth]}
+      [""
+       {:get {:handler (organizations/index db)}}]]
+     ["/reports" reports/index]]
     config)
    (ring/routes
     (ring/create-resource-handler {:path "/"})
