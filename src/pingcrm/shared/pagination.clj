@@ -7,4 +7,4 @@
         next-link {:url (when (< current-page page-number) (str uri (inc current-page))) :label "Next" :active (when (<= current-page (dec page-number)) true)}
         links (for [item (range 1 (inc page-number))]
                 {:url (str uri item) :label (str item) :active (when (= item current-page) true)})]
-    (concat [previous-link] links [next-link])))
+    (flatten [previous-link links next-link])))
