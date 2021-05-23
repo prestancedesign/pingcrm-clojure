@@ -21,7 +21,6 @@
   (app db))
 
 (defmethod ig/init-key :database.sql/connection [_ db-spec]
-  (println db-spec)
   (let [ds (jdbc/get-datasource db-spec)]
     (jdbc/with-options ds {:builder-fn rs/as-unqualified-maps})))
 
