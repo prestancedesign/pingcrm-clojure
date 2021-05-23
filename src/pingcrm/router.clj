@@ -3,6 +3,7 @@
             [buddy.auth.middleware :as bam]
             [inertia.middleware :as inertia]
             [pingcrm.handlers.auth :as auth]
+            [pingcrm.handlers.contacts :as contact]
             [pingcrm.handlers.dashboard :as dashboard]
             [pingcrm.handlers.organizations :as organizations]
             [pingcrm.handlers.reports :as reports]
@@ -71,6 +72,10 @@
      ["/organizations" {:middleware [wrap-auth]}
       [""
        {:get {:handler    (organizations/index db)
+              :parameters {:query {(s/optional-key :page) Long}}}}]]
+     ["/contacts" {:middleware [wrap-auth]}
+      [""
+       {:get {:handler    (contact/index db)
               :parameters {:query {(s/optional-key :page) Long}}}}]]
      ["/reports" reports/index]]
     config)
