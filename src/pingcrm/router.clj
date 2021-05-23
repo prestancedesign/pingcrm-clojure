@@ -11,13 +11,16 @@
             [pingcrm.middleware.inertia :refer [wrap-inertia-share]]
             [pingcrm.templates.404 :as error]
             [pingcrm.templates.app :refer [template]]
+            [reitit.coercion.schema :as schema-coercion]
             [reitit.dev.pretty :as pretty]
             [reitit.ring :as ring]
+            [reitit.ring.coercion :as rrc]
             [reitit.ring.middleware.parameters :as params]
             [ring.middleware.flash :refer [wrap-flash]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.session :refer [wrap-session]]
-            [ring.middleware.session.memory :refer [memory-store]]))
+            [ring.middleware.session.memory :refer [memory-store]]
+            [schema.core :as s]))
 
 (def asset-version "1")
 
@@ -28,13 +31,18 @@
 (def config
   {:conflicts nil
    :exception pretty/exception
-   :data {:middleware [params/parameters-middleware
+   :data {:coercion   schema-coercion/coercion
+          :middleware [params/parameters-middleware
+                       rrc/coerce-exceptions-middleware
+                       rrc/coerce-request-middleware
+                       rrc/coerce-response-middleware
                        wrap-keyword-params
                        [wrap-session {:store (memory-store session-store)}]
                        wrap-flash
                        [bam/wrap-authentication backend]
                        wrap-inertia-share
                        [inertia/wrap-inertia template asset-version]]}})
+
 (defn routes [db]
   (ring/ring-handler
    (ring/router
@@ -62,7 +70,8 @@
        {:put {:handler users/restore-user!}}]]
      ["/organizations" {:middleware [wrap-auth]}
       [""
-       {:get {:handler (organizations/index db)}}]]
+       {:get {:handler    (organizations/index db)
+              :parameters {:query {(s/optional-key :page) Long}}}}]]
      ["/reports" reports/index]]
     config)
    (ring/routes

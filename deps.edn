@@ -10,7 +10,8 @@
   buddy/buddy-auth {:mvn/version "3.0.1"}
   crypto-password/crypto-password {:mvn/version "0.2.1"}
   funcool/struct {:mvn/version "1.4.0"}
-  integrant/integrant {:mvn/version "0.8.0"}}
+  integrant/integrant {:mvn/version "0.8.0"}
+  prismatic/schema {:mvn/version "1.1.12"}}
  :aliases
  {:dev
   {:extra-paths ["dev/src"]

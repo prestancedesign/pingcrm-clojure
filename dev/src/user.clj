@@ -1,7 +1,9 @@
 (ns dev.src.user
-  (:require [pingcrm.system :as system]
+  (:require [integrant.repl :as ig-repl]
             [integrant.repl.state :as state]
-            [integrant.repl :as ig-repl]))
+            [pingcrm.models.organizations :as org]
+            [pingcrm.models.users :as users]
+            [pingcrm.system :as system]))
 
 (ig-repl/set-prep!
  (fn [] system/config))
@@ -13,3 +15,10 @@
 
 (def app (-> state/system :pingcrm/app))
 (def db (-> state/system :database.sql/connection))
+
+(comment
+  (org/retrieve-and-filter-organization db nil 0)
+
+  (org/count-organizations db)
+
+  (users/retrieve-and-filter-users nil))
