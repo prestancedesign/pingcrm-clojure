@@ -94,9 +94,12 @@
       ["/create"
        {:get contacts/contacts-form}]
       ["/:contact-id"
-       {:put    {:handler (contacts/update-contact! db)}}]
+       {:put    {:handler (contacts/update-contact! db)}
+        :delete {:handler (contacts/delete-contact! db)}}]
       ["/:contact-id/edit"
-       {:get {:handler (contacts/edit-contact! db)}}]]
+       {:get {:handler (contacts/edit-contact! db)}}]
+      ["/:contact-id/restore"
+       {:put {:handler (contacts/restore-contact! db)}}]]
      ["/reports" reports/index]]
     (config db))
    (ring/routes

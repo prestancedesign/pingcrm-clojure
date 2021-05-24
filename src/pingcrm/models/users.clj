@@ -73,7 +73,3 @@
                                :updated_at :current_timestamp}
                          :where [:= :id id]})]
     (jdbc/execute-one! db query)))
-
-(comment
-
-  (sql/delete! db :users {:email "tone.tonydeaf@gmail.com"}))

@@ -46,3 +46,21 @@
       (when contact-updated?
         (-> (rr/redirect url :see-other)
             (assoc :flash {:success "Contact updated."}))))))
+
+(defn delete-contact! [db]
+  (fn [req]
+    (let [id (-> req :path-params :contact-id)
+          back (get (:headers req) "referer")
+          contact-deleted? (db/soft-delete-contact! db id)]
+      (when contact-deleted?
+        (-> (rr/redirect back :see-other)
+            (assoc :flash {:success "Contact deleted."}))))))
+
+(defn restore-contact! [db]
+  (fn [req]
+    (let [id (-> req :path-params :contact-id)
+          back (get (:headers req) "referer")
+          contact-restored? (db/restore-deleted-contact! db id)]
+      (when contact-restored?
+        (-> (rr/redirect back :see-other)
+            (assoc :flash {:success "Contact restored."}))))))

@@ -48,3 +48,19 @@
 (defn update-contact!
   [db contact id]
   (sql/update! db :contacts contact {:id id}))
+
+(defn soft-delete-contact!
+  [db id]
+  (let [query (h/format {:update :contacts
+                         :set {:deleted_at :current_timestamp
+                               :updated_at :current_timestamp}
+                         :where [:= :id id]})]
+    (jdbc/execute-one! db query)))
+
+(defn restore-deleted-contact!
+  [db id]
+  (let [query (h/format {:update :contacts
+                         :set {:deleted_at nil
+                               :updated_at :current_timestamp}
+                         :where [:= :id id]})]
+    (jdbc/execute-one! db query)))
