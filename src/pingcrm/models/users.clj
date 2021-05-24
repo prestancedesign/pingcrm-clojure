@@ -6,10 +6,6 @@
             [next.jdbc.sql :as sql]
             [clojure.set :as set]))
 
-(def ds (jdbc/get-datasource {:dbtype "sqlite" :dbname "database/database.sqlite"}))
-
-(def db (jdbc/with-options ds {:builder-fn rs/as-unqualified-maps}))
-
 (extend-protocol rs/ReadableColumn
   Integer
   (read-column-by-index [x mrs i]
@@ -18,7 +14,7 @@
       x)))
 
 (defn retrieve-and-filter-users
-  [filters]
+  [db filters]
   (let [search-filter (when-let [search (:search filters)]
                         [:or [:like :first_name (str "%" search "%")]
                          [:like :last_name (str "%" search "%")]
@@ -39,7 +35,7 @@
     (jdbc/execute! db query)))
 
 (defn get-user-by-id
-  [id]
+  [db id]
   ;;TODO: Use with-open for better performance
   (let [user (sql/get-by-id db :users id)
         account-id (:account_id user)
@@ -47,11 +43,11 @@
     (assoc user :account account)))
 
 (defn get-user-by-email
-  [email]
+  [db email]
   (sql/get-by-id db :users email :email {}))
 
 (defn insert-user!
-  [user]
+  [db user]
   (let [user (set/rename-keys user {:photo :photo_path})
         query (h/format{:insert-into :users
                              :values [(merge user {:created_at :current_timestamp
@@ -59,11 +55,11 @@
     (jdbc/execute-one! db query)))
 
 (defn update-user!
-  [user id]
+  [db user id]
   (sql/update! db :users user {:id id}))
 
 (defn soft-delete-user!
-  [id]
+  [db id]
   (let [query (h/format {:update :users
                          :set {:deleted_at :current_timestamp
                                :updated_at :current_timestamp}
@@ -71,7 +67,7 @@
     (jdbc/execute-one! db query)))
 
 (defn restore-deleted-user!
-  [id]
+  [db id]
   (let [query (h/format {:update :users
                          :set {:deleted_at nil
                                :updated_at :current_timestamp}

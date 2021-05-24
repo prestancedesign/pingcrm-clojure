@@ -29,10 +29,11 @@
 
 (def cookie-store-secret "x&Hvnhx7BqYalmQr")
 
-(def config
+(defn config [db]
   {:conflicts nil
    :exception pretty/exception
    :data {:coercion   schema-coercion/coercion
+          :db db
           :middleware [params/parameters-middleware
                        rrc/coerce-exceptions-middleware
                        rrc/coerce-request-middleware
@@ -57,17 +58,17 @@
        :middleware [wrap-auth]}]
      ["/users" {:middleware [wrap-auth]}
       [""
-       {:get  {:handler users/get-users}
-        :post {:handler users/store-user!}}]
+       {:get  {:handler (users/get-users db)}
+        :post {:handler (users/store-user! db)}}]
       ["/create"
        {:get users/user-form}]
       ["/:user-id"
-       {:post   {:handler users/update-user!}
-        :delete {:handler users/delete-user!}}]
+       {:post   {:handler (users/update-user! db)}
+        :delete {:handler (users/delete-user! db)}}]
       ["/:user-id/edit"
-       {:get {:handler users/edit-user!}}]
+       {:get {:handler (users/edit-user! db)}}]
       ["/:user-id/restore"
-       {:put {:handler users/restore-user!}}]]
+       {:put {:handler (users/restore-user! db)}}]]
      ["/organizations" {:middleware [wrap-auth]}
       [""
        {:get  {:handler    (organizations/index db)
@@ -87,7 +88,7 @@
        {:get {:handler    (contact/index db)
               :parameters {:query {(s/optional-key :page) Long}}}}]]
      ["/reports" reports/index]]
-    config)
+    (config db))
    (ring/routes
     (ring/create-resource-handler {:path "/"})
     (ring/create-default-handler
