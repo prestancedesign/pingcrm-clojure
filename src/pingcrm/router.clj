@@ -70,10 +70,13 @@
        {:put {:handler users/restore-user!}}]]
      ["/organizations" {:middleware [wrap-auth]}
       [""
-       {:get {:handler    (organizations/index db)
-              :parameters {:query {(s/optional-key :page) Long}}}}]
+       {:get  {:handler    (organizations/index db)
+               :parameters {:query {(s/optional-key :page) Long}}}
+        :post {:handler (organizations/store-organization! db)}}]
+      ["/create"
+       {:get organizations/organization-form}]
       ["/:organization-id"
-       {:put {:handler (organizations/update-organization! db)}
+       {:put    {:handler (organizations/update-organization! db)}
         :delete {:handler (organizations/delete-organization! db)}}]
       ["/:organization-id/edit"
        {:get {:handler (organizations/edit-organization! db)}}]

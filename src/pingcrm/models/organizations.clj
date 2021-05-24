@@ -37,6 +37,13 @@
         contacts (sql/find-by-keys db :contacts {:organization_id id} {:columns [:id ["first_name || \" \" || last_name" :name] :city :phone]})]
     (assoc organization :contacts contacts)))
 
+(defn insert-organization!
+  [db organization]
+  (let [query (h/format{:insert-into :organizations
+                        :values [(merge organization {:created_at :current_timestamp
+                                                      :updated_at :current_timestamp})]})]
+   (jdbc/execute-one! db query)))
+
 (defn update-organization!
   [db organization id]
   (sql/update! db :organizations organization {:id id}))

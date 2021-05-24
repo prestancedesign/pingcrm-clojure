@@ -29,8 +29,7 @@
                :filters filters}]
     (inertia/render "Users/Index" props)))
 
-(defn user-form
-  [_]
+(defn user-form [_]
   (inertia/render "Users/Create"))
 
 (defn store-user!

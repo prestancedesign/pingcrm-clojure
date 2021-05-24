@@ -18,6 +18,18 @@
                  :filters filters}]
       (inertia/render "Organizations/Index" props))))
 
+(defn organization-form [_]
+  (inertia/render "Organizations/Create"))
+
+(defn store-organization!
+  [db]
+  (fn [{:keys [body-params] :as req}]
+    (let [account-id (-> req :identity :account_id)
+          organization-created? (org-db/insert-organization! db (assoc body-params :account_id account-id))]
+      (when organization-created?
+        (-> (rr/redirect "/organizations")
+            (assoc :flash {:success "Organization created."}))))))
+
 (defn edit-organization!
   [db]
   (fn [{:keys [path-params]}]
