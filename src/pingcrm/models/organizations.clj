@@ -36,3 +36,7 @@
   (let [organization (sql/get-by-id db :organizations id)
         contacts (sql/find-by-keys db :contacts {:organization_id id} {:columns [:id ["first_name || \" \" || last_name" :name] :city :phone]})]
     (assoc organization :contacts contacts)))
+
+(defn update-organization!
+  [db organization id]
+  (sql/update! db :organizations organization {:id id}))
