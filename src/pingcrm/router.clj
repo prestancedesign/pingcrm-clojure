@@ -88,11 +88,15 @@
      ;; Contacts routes
      ["/contacts" {:middleware [wrap-auth]}
       [""
-       {:get {:handler    (contacts/index db)
-              :parameters {:query {(s/optional-key :page) Long}}}
+       {:get  {:handler    (contacts/index db)
+               :parameters {:query {(s/optional-key :page) Long}}}
         :post {:handler (contacts/store-contact! db)}}]
       ["/create"
-       {:get contacts/contacts-form}]]
+       {:get contacts/contacts-form}]
+      ["/:contact-id"
+       {:put    {:handler (contacts/update-contact! db)}}]
+      ["/:contact-id/edit"
+       {:get {:handler (contacts/edit-contact! db)}}]]
      ["/reports" reports/index]]
     (config db))
    (ring/routes

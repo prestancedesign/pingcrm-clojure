@@ -1,7 +1,8 @@
 (ns pingcrm.models.contacts
   (:require [honey.sql :as h]
             [honey.sql.helpers :as helpers]
-            [next.jdbc :as jdbc]))
+            [next.jdbc :as jdbc]
+            [next.jdbc.sql :as sql]))
 
 (defn count-contacts [db]
   (let [query (h/format {:select [[:%count.* :aggregate]]
@@ -33,9 +34,17 @@
                                all-filters))]
     (jdbc/execute! db query)))
 
+(defn get-contact-by-id
+  [db id]
+  (sql/get-by-id db :contacts id))
+
 (defn insert-contact!
   [db contact]
   (let [query (h/format{:insert-into :contacts
                         :values [(merge contact {:created_at :current_timestamp
                                                  :updated_at :current_timestamp})]})]
     (jdbc/execute-one! db query)))
+
+(defn update-contact!
+  [db contact id]
+  (sql/update! db :contacts contact {:id id}))

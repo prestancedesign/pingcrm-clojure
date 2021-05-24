@@ -2,7 +2,8 @@
   (:require [inertia.middleware :as inertia]
             [pingcrm.models.contacts :as db]
             [pingcrm.shared.pagination :as pagination]
-            [ring.util.response :as rr]))
+            [ring.util.response :as rr]
+            [pingcrm.models.organizations :as org-db]))
 
 (defn index
   [db]
@@ -29,3 +30,19 @@
       (when contacts-created?
         (-> (rr/redirect "/contacts")
             (assoc :flash {:success "Contacts created."}))))))
+
+(defn edit-contact! [db]
+  (fn [{:keys [path-params]}]
+    (let [props {:contact (db/get-contact-by-id db (:contact-id path-params))
+                 :organizations (org-db/list-organizations db)}]
+      (inertia/render "Contacts/Edit" props))))
+
+(defn update-contact! [db]
+  (fn [{:keys [body-params] :as req}]
+    (let [id (-> req :path-params :contact-id)
+          url (str (-> req :uri) "/edit")
+          ;; contact-form (select-keys (:body-params req) [:first_name :last_name :email :owner])
+          contact-updated? (db/update-contact! db body-params id)]
+      (when contact-updated?
+        (-> (rr/redirect url :see-other)
+            (assoc :flash {:success "Contact updated."}))))))

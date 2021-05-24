@@ -4,6 +4,16 @@
             [next.jdbc :as jdbc]
             [next.jdbc.sql :as sql]))
 
+(defn list-organizations [db]
+  (let [query (h/format {:select [:id :name]
+                         :from [:organizations]
+                         :where [:and
+                                 [:= :account_id 1]
+                                 [:<> :account_id nil]
+                                 [:= :deleted_at nil]]
+                         :order-by [:name]})]
+    (jdbc/execute! db query)))
+
 (defn count-organizations [db]
   (let [query (h/format {:select [[:%count.* :aggregate]]
                          :from [:organizations]
