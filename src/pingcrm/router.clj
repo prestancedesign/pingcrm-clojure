@@ -1,6 +1,7 @@
 (ns pingcrm.router
   (:require [buddy.auth.backends :as backends]
             [buddy.auth.middleware :as bam]
+            [crypto.random :as random]
             [inertia.middleware :as inertia]
             [pingcrm.handlers.auth :as auth]
             [pingcrm.handlers.contacts :as contact]
@@ -27,7 +28,7 @@
 
 (def backend (backends/session))
 
-(def cookie-store-secret "x&Hvnhx7BqYalmQr")
+(def cookie-store-secret (random/bytes 16))
 
 (def config
   {:conflicts nil
