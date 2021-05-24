@@ -73,9 +73,12 @@
        {:get {:handler    (organizations/index db)
               :parameters {:query {(s/optional-key :page) Long}}}}]
       ["/:organization-id"
-       {:put {:handler (organizations/update-organization! db)}}]
+       {:put {:handler (organizations/update-organization! db)}
+        :delete {:handler (organizations/delete-organization! db)}}]
       ["/:organization-id/edit"
-       {:get {:handler (organizations/edit-organization! db)}}]]
+       {:get {:handler (organizations/edit-organization! db)}}]
+      ["/:organization-id/restore"
+       {:put {:handler (organizations/restore-organization! db)}}]]
      ["/contacts" {:middleware [wrap-auth]}
       [""
        {:get {:handler    (contact/index db)

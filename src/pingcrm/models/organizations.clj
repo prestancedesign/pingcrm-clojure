@@ -40,3 +40,19 @@
 (defn update-organization!
   [db organization id]
   (sql/update! db :organizations organization {:id id}))
+
+(defn soft-delete-organization!
+  [db id]
+  (let [query (h/format {:update :organizations
+                         :set {:deleted_at :current_timestamp
+                               :updated_at :current_timestamp}
+                         :where [:= :id id]})]
+    (jdbc/execute-one! db query)))
+
+(defn restore-deleted-organization!
+  [db id]
+  (let [query (h/format {:update :organizations
+                         :set {:deleted_at nil
+                               :updated_at :current_timestamp}
+                         :where [:= :id id]})]
+    (jdbc/execute-one! db query)))

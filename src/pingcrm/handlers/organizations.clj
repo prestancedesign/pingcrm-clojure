@@ -33,3 +33,23 @@
       (when organization-updated?
         (-> (rr/redirect url :see-other)
             (assoc :flash {:success "Organization updated."}))))))
+
+(defn delete-organization!
+  [db]
+  (fn [req]
+    (let [id (-> req :path-params :organization-id)
+          back (get (:headers req) "referer")
+          organization-deleted? (org-db/soft-delete-organization! db id)]
+      (when organization-deleted?
+        (-> (rr/redirect back :see-other)
+            (assoc :flash {:success "Organization deleted."}))))))
+
+(defn restore-organization!
+  [db]
+  (fn [req]
+    (let [id (-> req :path-params :organization-id)
+          back (get (:headers req) "referer")
+          organization-restored? (org-db/restore-deleted-organization! db id)]
+      (when organization-restored?
+        (-> (rr/redirect back :see-other)
+            (assoc :flash {:success "Organization restored."}))))))
