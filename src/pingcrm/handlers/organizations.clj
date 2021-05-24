@@ -16,3 +16,9 @@
                                  :links (pagination/pagination-links uri page count 10)}
                  :filters filters}]
       (inertia/render "Organizations/Index" props))))
+
+(defn edit-organization!
+  [db]
+  (fn [ {:keys [path-params]}]
+    (let [props {:organization (org-db/get-organization-by-id db (:organization-id path-params))}]
+      (inertia/render "Organizations/Edit" props))))

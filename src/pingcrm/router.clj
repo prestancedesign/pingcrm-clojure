@@ -60,8 +60,7 @@
        {:get  {:handler users/get-users}
         :post {:handler users/store-user!}}]
       ["/create"
-       {:get        users/user-form
-        :middleware [wrap-auth]}]
+       {:get        users/user-form}]
       ["/:user-id"
        {:post   {:handler users/update-user!}
         :delete {:handler users/delete-user!}}]
@@ -72,7 +71,9 @@
      ["/organizations" {:middleware [wrap-auth]}
       [""
        {:get {:handler    (organizations/index db)
-              :parameters {:query {(s/optional-key :page) Long}}}}]]
+              :parameters {:query {(s/optional-key :page) Long}}}}]
+      ["/:organization-id/edit"
+       {:get {:handler (organizations/edit-organization! db)}}]]
      ["/contacts" {:middleware [wrap-auth]}
       [""
        {:get {:handler    (contact/index db)

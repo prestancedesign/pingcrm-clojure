@@ -21,4 +21,6 @@
 
   (org/count-organizations db)
 
-  (users/retrieve-and-filter-users nil))
+  (users/retrieve-and-filter-users nil)
+
+  (org/get-organization-by-id db 23))

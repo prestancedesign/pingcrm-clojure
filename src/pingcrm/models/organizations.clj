@@ -1,7 +1,8 @@
 (ns pingcrm.models.organizations
   (:require [honey.sql :as h]
             [honey.sql.helpers :as helpers]
-            [next.jdbc :as jdbc]))
+            [next.jdbc :as jdbc]
+            [next.jdbc.sql :as sql]))
 
 (defn count-organizations [db]
   (let [query (h/format {:select [[:%count.* :aggregate]]
@@ -28,3 +29,10 @@
                                 :offset offset}
                                all-filters))]
     (jdbc/execute! db query)))
+
+(defn get-organization-by-id
+  [db id]
+  ;;TODO: Use with-open for better performance
+  (let [organization (sql/get-by-id db :organizations id)
+        contacts (sql/find-by-keys db :contacts {:organization_id id} {:columns [:id ["first_name || \" \" || last_name" :name] :city :phone]})]
+    (assoc organization :contacts contacts)))
