@@ -50,7 +50,7 @@
    (ring/router
     [["/login"
       {:get  auth/login
-       :post {:handler auth/login-authenticate}}]
+       :post {:handler (auth/login-authenticate db)}}]
      ["/logout"
       {:delete {:handler auth/logout}}]
      ["/"
