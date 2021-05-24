@@ -20,14 +20,14 @@
             [ring.middleware.flash :refer [wrap-flash]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.session :refer [wrap-session]]
-            [ring.middleware.session.memory :refer [memory-store]]
+            [ring.middleware.session.cookie :refer [cookie-store]]
             [schema.core :as s]))
 
 (def asset-version "1")
 
 (def backend (backends/session))
 
-(defonce session-store (atom {}))
+(def cookie-store-secret "x&Hvnhx7BqYalmQr")
 
 (def config
   {:conflicts nil
@@ -38,7 +38,7 @@
                        rrc/coerce-request-middleware
                        rrc/coerce-response-middleware
                        wrap-keyword-params
-                       [wrap-session {:store (memory-store session-store)}]
+                       [wrap-session {:store (cookie-store {:key cookie-store-secret})}]
                        wrap-flash
                        [bam/wrap-authentication backend]
                        wrap-inertia-share
