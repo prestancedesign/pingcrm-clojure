@@ -3,7 +3,7 @@
             [buddy.auth.middleware :as bam]
             [inertia.middleware :as inertia]
             [pingcrm.handlers.auth :as auth]
-            [pingcrm.handlers.contacts :as contact]
+            [pingcrm.handlers.contacts :as contacts]
             [pingcrm.handlers.dashboard :as dashboard]
             [pingcrm.handlers.organizations :as organizations]
             [pingcrm.handlers.reports :as reports]
@@ -56,6 +56,7 @@
      ["/"
       {:get        dashboard/index
        :middleware [wrap-auth]}]
+     ;; Users routes
      ["/users" {:middleware [wrap-auth]}
       [""
        {:get  {:handler (users/get-users db)}
@@ -69,6 +70,7 @@
        {:get {:handler (users/edit-user! db)}}]
       ["/:user-id/restore"
        {:put {:handler (users/restore-user! db)}}]]
+     ;; Organizations routes
      ["/organizations" {:middleware [wrap-auth]}
       [""
        {:get  {:handler    (organizations/index db)
@@ -83,10 +85,14 @@
        {:get {:handler (organizations/edit-organization! db)}}]
       ["/:organization-id/restore"
        {:put {:handler (organizations/restore-organization! db)}}]]
+     ;; Contacts routes
      ["/contacts" {:middleware [wrap-auth]}
       [""
-       {:get {:handler    (contact/index db)
-              :parameters {:query {(s/optional-key :page) Long}}}}]]
+       {:get {:handler    (contacts/index db)
+              :parameters {:query {(s/optional-key :page) Long}}}
+        :post {:handler (contacts/store-contact! db)}}]
+      ["/create"
+       {:get contacts/contacts-form}]]
      ["/reports" reports/index]]
     (config db))
    (ring/routes

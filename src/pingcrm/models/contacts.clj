@@ -32,3 +32,10 @@
                                 :offset offset}
                                all-filters))]
     (jdbc/execute! db query)))
+
+(defn insert-contact!
+  [db contact]
+  (let [query (h/format{:insert-into :contacts
+                        :values [(merge contact {:created_at :current_timestamp
+                                                 :updated_at :current_timestamp})]})]
+    (jdbc/execute-one! db query)))
