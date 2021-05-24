@@ -14,8 +14,11 @@
 
 (defn retrieve-and-filter-contacts
   [db filters offset]
+  ;;TODO: Add filter by organization name
   (let [search-filter (when-let [search (:search filters)]
-                        [:like :name (str "%" search "%")])
+                        [:or [:like :c.first_name (str "%" search "%")]
+                         [:like :c.last_name (str "%" search "%")]
+                         [:like :c.email (str "%" search "%")]])
         trashed-filter (case (:trashed filters)
                          "with" nil
                          "only" [:<> :c.deleted_at nil]
