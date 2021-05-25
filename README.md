@@ -1,10 +1,10 @@
 # Ping CRM on Clojure
 
-A demo application built with Clojure to illustrate how Inertia.js and works.
+A demo application built with Clojure to illustrate how [Inertia.js](https://inertiajs.com/) and works.
 
 ![](screenshot.png)
 
-This is a port of the original Ping CRM written in Laravel/PHP to Clojure with Integrant, Ring, Reitit and next.jdbc.
+This is a port of the original [Ping CRM](https://github.com/inertiajs/pingcrm) written in Laravel/PHP to Clojure with Integrant, Ring, Reitit and next.jdbc.
 For now the Vue.js front-end come from the original demo.
 
 I am planning a ClojureScript Reagent version later.
