@@ -1,6 +1,6 @@
 # Ping CRM on Clojure
 
-A demo application built with Clojure to illustrate how [Inertia.js](https://inertiajs.com/) and works.
+A demo application built with Clojure to illustrate how [Inertia.js](https://inertiajs.com/) works.
 
 ![](screenshot.png)
 
