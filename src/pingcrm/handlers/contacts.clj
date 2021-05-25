@@ -26,8 +26,10 @@
                  :filters filters}]
       (inertia/render "Contacts/Index" props))))
 
-(defn contacts-form [_]
-  (inertia/render "Contacts/Create"))
+(defn contacts-form [db]
+  (fn [_]
+    (let [props {:organizations (org-db/list-organizations db)}]
+      (inertia/render "Contacts/Create" props))))
 
 (defn store-contact! [db]
   (fn [{:keys [body-params] :as req}]

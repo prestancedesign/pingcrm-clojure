@@ -92,7 +92,7 @@
                :parameters {:query {(s/optional-key :page) Long}}}
         :post {:handler (contacts/store-contact! db)}}]
       ["/create"
-       {:get contacts/contacts-form}]
+       {:get (contacts/contacts-form db)}]
       ["/:contact-id"
        {:put    {:handler (contacts/update-contact! db)}
         :delete {:handler (contacts/delete-contact! db)}}]
