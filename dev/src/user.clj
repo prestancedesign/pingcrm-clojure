@@ -1,4 +1,4 @@
-(ns dev.src.user
+(ns user
   (:require [integrant.repl :as ig-repl]
             [integrant.repl.state :as state]
             [pingcrm.models.organizations :as org]

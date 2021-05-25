@@ -1,4 +1,4 @@
-{:paths ["src" "resources" "." "database"]
+{:paths ["src" "resources"]
  :deps
  {metosin/reitit {:mvn/version "0.5.13"}
   com.github.prestancedesign/inertia-clojure {:mvn/version "0.2.1"}
@@ -15,4 +15,5 @@
  :aliases
  {:dev
   {:extra-paths ["dev/src"]
-   :extra-deps {integrant/repl {:mvn/version "0.3.2"}}}}}
+   :extra-deps {integrant/repl {:mvn/version "0.3.2"}}}
+  :run {:main-opts ["-m" "pingcrm.system"]}}}

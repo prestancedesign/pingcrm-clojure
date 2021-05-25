@@ -11,7 +11,7 @@
 (def config
   {:server/jetty {:handler (ig/ref :pingcrm/app) :port 3000}
    :pingcrm/app {:db (ig/ref :database.sql/connection)}
-   :database.sql/connection {:dbtype "sqlite" :dbname "database/database.sqlite"}})
+   :database.sql/connection {:dbtype "sqlite" :dbname "resources/database/database.sqlite"}})
 
 (defmethod ig/init-key :server/jetty [_ {:keys [handler port]}]
   (println "\nServer running on port" port)
