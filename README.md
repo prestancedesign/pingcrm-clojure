@@ -36,6 +36,10 @@ Once REPL starts, run the system:
 
 Open [http://localhost:3000](http://localhost:3000)
 
+## Clojure adapter
+
+https://github.com/prestancedesign/inertia-clojure
+
 # License & Copyright
 
 Copyright (c) 2021 Prestance / Michaël SALIHI.
