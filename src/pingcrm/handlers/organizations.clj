@@ -2,7 +2,12 @@
   (:require [inertia.middleware :as inertia]
             [pingcrm.models.organizations :as org-db]
             [pingcrm.shared.pagination :as pagination]
-            [ring.util.response :as rr]))
+            [ring.util.response :as rr]
+            [struct.core :as st]))
+
+(def organization-schema
+  [[:name st/required st/string]
+   [:email st/required st/email]])
 
 (defn index
   [db]
@@ -24,11 +29,14 @@
 (defn store-organization!
   [db]
   (fn [{:keys [body-params] :as req}]
-    (let [account-id (-> req :identity :account_id)
-          organization-created? (org-db/insert-organization! db (assoc body-params :account_id account-id))]
-      (when organization-created?
-        (-> (rr/redirect "/organizations")
-            (assoc :flash {:success "Organization created."}))))))
+    (if-let [errors (first (st/validate body-params organization-schema))]
+      (-> (rr/redirect "/organizations/create")
+          (assoc :flash {:error errors}))
+      (let [account-id (-> req :identity :account_id)
+            organization-created? (org-db/insert-organization! db (assoc body-params :account_id account-id))]
+        (when organization-created?
+          (-> (rr/redirect "/organizations")
+              (assoc :flash {:success "Organization created."})))))))
 
 (defn edit-organization!
   [db]
@@ -40,11 +48,14 @@
   [db]
   (fn [{:keys [body-params] :as req}]
     (let [id (-> req :path-params :organization-id)
-          url (str (-> req :uri) "/edit")
-          organization-updated? (org-db/update-organization! db body-params id)]
-      (when organization-updated?
+          url (str (-> req :uri) "/edit")]
+      (if-let [errors (first (st/validate body-params organization-schema))]
         (-> (rr/redirect url :see-other)
-            (assoc :flash {:success "Organization updated."}))))))
+            (assoc :flash {:error errors}))
+        (let [organization-updated? (org-db/update-organization! db body-params id)]
+             (when organization-updated?
+               (-> (rr/redirect url :see-other)
+                   (assoc :flash {:success "Organization updated."}))))))))
 
 (defn delete-organization!
   [db]

@@ -1,9 +1,15 @@
 (ns pingcrm.handlers.contacts
   (:require [inertia.middleware :as inertia]
             [pingcrm.models.contacts :as db]
+            [pingcrm.models.organizations :as org-db]
             [pingcrm.shared.pagination :as pagination]
             [ring.util.response :as rr]
-            [pingcrm.models.organizations :as org-db]))
+            [struct.core :as st]))
+
+(def contact-schema
+  [[:first_name st/required st/string]
+   [:last_name st/required st/string]
+   [:email st/required st/email]])
 
 (defn index
   [db]
@@ -25,11 +31,14 @@
 
 (defn store-contact! [db]
   (fn [{:keys [body-params] :as req}]
-    (let [account-id (-> req :identity :account_id)
-          contacts-created? (db/insert-contact! db (assoc body-params :account_id account-id))]
-      (when contacts-created?
-        (-> (rr/redirect "/contacts")
-            (assoc :flash {:success "Contacts created."}))))))
+    (if-let [errors (first (st/validate body-params contact-schema))]
+      (-> (rr/redirect "/contacts/create")
+          (assoc :flash {:error errors}))
+      (let [account-id (-> req :identity :account_id)
+            contacts-created? (db/insert-contact! db (assoc body-params :account_id account-id))]
+        (when contacts-created?
+          (-> (rr/redirect "/contacts")
+              (assoc :flash {:success "Contacts created."})))))))
 
 (defn edit-contact! [db]
   (fn [{:keys [path-params]}]
@@ -40,12 +49,14 @@
 (defn update-contact! [db]
   (fn [{:keys [body-params] :as req}]
     (let [id (-> req :path-params :contact-id)
-          url (str (-> req :uri) "/edit")
-          ;; contact-form (select-keys (:body-params req) [:first_name :last_name :email :owner])
-          contact-updated? (db/update-contact! db body-params id)]
-      (when contact-updated?
+          url (str (-> req :uri) "/edit")]
+      (if-let [errors (first (st/validate body-params contact-schema))]
         (-> (rr/redirect url :see-other)
-            (assoc :flash {:success "Contact updated."}))))))
+            (assoc :flash {:error errors}))
+        (let [contact-updated? (db/update-contact! db body-params id)]
+          (when contact-updated?
+            (-> (rr/redirect url :see-other)
+                (assoc :flash {:success "Contact updated."}))))))))
 
 (defn delete-contact! [db]
   (fn [req]

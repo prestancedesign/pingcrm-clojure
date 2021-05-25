@@ -5,19 +5,16 @@
             [ring.util.response :as rr]
             [struct.core :as st]))
 
-(def user-validation
+(def user-schema
   [[:first_name st/required st/string]
    [:last_name st/required st/string]
    [:email st/required st/email]
    [:owner st/required]])
 
-(defn validate-user [params]
-  (first (st/validate params user-validation)))
-
 (defn validate-unique-user
   [db params]
   (let [{:keys [email]} params
-        validation (validate-user params)]
+        validation (first (st/validate params user-schema))]
     (if (db/get-user-by-email  db email)
       (assoc validation :email "The email has already been taken.")
       validation)))
@@ -54,7 +51,7 @@
   (fn [{:keys [body-params] :as req}]
     (let [id (-> req :path-params :user-id)
           url (str (-> req :uri) "/edit")]
-      (if-let [errors (validate-user body-params)]
+      (if-let [errors (first (st/validate body-params user-schema))]
         (-> (rr/redirect url :see-other)
             (assoc :flash {:error errors}))
         (let [user-form (select-keys (:body-params req) [:first_name :last_name :email :owner])
