@@ -33,7 +33,6 @@
   {:conflicts nil
    :exception pretty/exception
    :data {:coercion   schema-coercion/coercion
-          :db db
           :middleware [params/parameters-middleware
                        rrc/coerce-exceptions-middleware
                        rrc/coerce-request-middleware
@@ -42,7 +41,7 @@
                        [wrap-session {:store (cookie-store {:key cookie-store-secret})}]
                        wrap-flash
                        [bam/wrap-authentication backend]
-                       wrap-inertia-share
+                       [wrap-inertia-share db]
                        [inertia/wrap-inertia template asset-version]]}})
 
 (defn routes [db]
