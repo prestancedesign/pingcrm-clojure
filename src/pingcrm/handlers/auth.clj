@@ -17,10 +17,12 @@
           user (db/get-user-by-email db email)
           sanitized-user (dissoc user :password)
           session (:session request)]
-      (when (and user (password/check password (:password user)))
+      (if (and user (password/check password (:password user)))
         (let [updated-session (assoc session :identity sanitized-user)]
           (-> (rr/redirect "/")
-              (assoc :session updated-session)))))))
+              (assoc :session updated-session)))
+        (-> (rr/redirect "/login")
+            (assoc :flash {:error {:email "These credentials do not match our records."}}))))))
 
 (defn logout [_]
   (-> (rr/redirect "/" :see-other)
