@@ -36,11 +36,13 @@ Once REPL starts, run the system:
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## Clojure adapter
+## External resources
 
-https://github.com/prestancedesign/inertia-clojure
+- Clojure Inertia adapter: https://github.com/prestancedesign/inertia-clojure
+- Inertia.js documentation: https://inertiajs.com/
+- Original Ping CRM demo written in PHP Laravel/Vue.js: https://github.com/inertiajs/pingcrm
 
-# License & Copyright
+## License & Copyright
 
 Copyright (c) 2021 Prestance / Michaël SALIHI.
 Distributed under the MIT license.
