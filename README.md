@@ -5,11 +5,12 @@ A demo application built with Clojure to illustrate how [Inertia.js](https://ine
 ![](screenshot.png)
 
 This is a port of the original [Ping CRM](https://github.com/inertiajs/pingcrm) written in Laravel/PHP to Clojure with Integrant, Ring, Reitit and next.jdbc.
-For now the Vue.js front-end come from the original demo.
+For now the front-end come from the original demo written in Vue.js.
+A ClojureScript Reagent version is on the todo.
 
-I am planning a ClojureScript Reagent version later.
+There is a hosted installation of this demo available at https://inertia.prestance-design.com/.
 
-## Usage
+## Installation
 
 Clone the repo locally:
 
