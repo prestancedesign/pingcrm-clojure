@@ -16,4 +16,10 @@
  {:dev
   {:extra-paths ["dev/src"]
    :extra-deps {integrant/repl {:mvn/version "0.3.2"}}}
-  :run {:main-opts ["-m" "pingcrm.system"]}}}
+  :run {:main-opts ["-m" "pingcrm.system"]}
+  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
+            :exec-fn hf.depstar/uberjar
+            :exec-args {:aot true
+                        :jar "pingcrm.jar"
+                        :main-class "pingcrm.system"
+                        :sync-pom true}}}}
