@@ -47,59 +47,49 @@
 (defn routes [db]
   (ring/ring-handler
    (ring/router
-    [["/login"
-      {:get  auth/login
-       :post {:handler (auth/login-authenticate db)}}]
-     ["/logout"
-      {:delete {:handler auth/logout}}]
-     ["/"
-      {:get        dashboard/index
-       :middleware [wrap-auth]}]
+    [;; Authentication routes
+     ["/login" {:get  {:handler auth/login}
+                :post {:handler (auth/login-authenticate db)}}]
+     ["/logout" {:delete {:handler auth/logout}}]
+
+     ;; Dashboard route
+     ["/" {:get        dashboard/index
+           :middleware [wrap-auth]}]
+
+     ;; Reports route
+     ["/reports" reports/index]
+
      ;; Users routes
      ["/users" {:middleware [wrap-auth]}
-      [""
-       {:get  {:handler (users/get-users db)}
-        :post {:handler (users/store-user! db)}}]
-      ["/create"
-       {:get users/user-form}]
-      ["/:user-id"
-       {:post   {:handler (users/update-user! db)}
-        :delete {:handler (users/delete-user! db)}}]
-      ["/:user-id/edit"
-       {:get {:handler (users/edit-user! db)}}]
-      ["/:user-id/restore"
-       {:put {:handler (users/restore-user! db)}}]]
+      ["" {:get  {:handler (users/get-users db)}
+           :post {:handler (users/store-user! db)}}]
+      ["/create" {:get users/user-form}]
+      ["/:user-id" {:post   {:handler (users/update-user! db)}
+                    :delete {:handler (users/delete-user! db)}}]
+      ["/:user-id/edit" {:get {:handler (users/edit-user! db)}}]
+      ["/:user-id/restore" {:put {:handler (users/restore-user! db)}}]]
+
      ;; Organizations routes
      ["/organizations" {:middleware [wrap-auth]}
-      [""
-       {:get  {:handler    (organizations/index db)
-               :parameters {:query {(s/optional-key :page) Long}}}
-        :post {:handler (organizations/store-organization! db)}}]
-      ["/create"
-       {:get organizations/organization-form}]
-      ["/:organization-id"
-       {:put    {:handler (organizations/update-organization! db)}
-        :delete {:handler (organizations/delete-organization! db)}}]
-      ["/:organization-id/edit"
-       {:get {:handler (organizations/edit-organization! db)}}]
-      ["/:organization-id/restore"
-       {:put {:handler (organizations/restore-organization! db)}}]]
+      ["" {:get  {:handler    (organizations/index db)
+                  :parameters {:query {(s/optional-key :page) Long}}}
+           :post {:handler (organizations/store-organization! db)}}]
+      ["/create" {:get organizations/organization-form}]
+      ["/:organization-id" {:put    {:handler (organizations/update-organization! db)}
+                            :delete {:handler (organizations/delete-organization! db)}}]
+      ["/:organization-id/edit" {:get {:handler (organizations/edit-organization! db)}}]
+      ["/:organization-id/restore" {:put {:handler (organizations/restore-organization! db)}}]]
+
      ;; Contacts routes
      ["/contacts" {:middleware [wrap-auth]}
-      [""
-       {:get  {:handler    (contacts/index db)
-               :parameters {:query {(s/optional-key :page) Long}}}
-        :post {:handler (contacts/store-contact! db)}}]
-      ["/create"
-       {:get (contacts/contacts-form db)}]
-      ["/:contact-id"
-       {:put    {:handler (contacts/update-contact! db)}
-        :delete {:handler (contacts/delete-contact! db)}}]
-      ["/:contact-id/edit"
-       {:get {:handler (contacts/edit-contact! db)}}]
-      ["/:contact-id/restore"
-       {:put {:handler (contacts/restore-contact! db)}}]]
-     ["/reports" reports/index]]
+      ["" {:get  {:handler    (contacts/index db)
+                  :parameters {:query {(s/optional-key :page) Long}}}
+           :post {:handler (contacts/store-contact! db)}}]
+      ["/create" {:get (contacts/contacts-form db)}]
+      ["/:contact-id" {:put    {:handler (contacts/update-contact! db)}
+                       :delete {:handler (contacts/delete-contact! db)}}]
+      ["/:contact-id/edit" {:get {:handler (contacts/edit-contact! db)}}]
+      ["/:contact-id/restore" {:put {:handler (contacts/restore-contact! db)}}]]]
     (config db))
    (ring/routes
     (ring/create-resource-handler {:path "/"})
