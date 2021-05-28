@@ -1,6 +1,6 @@
 (ns pingcrm.models.organizations
   (:require [honey.sql :as h]
-            [honey.sql.helpers :as helpers]
+            [honey.sql.helpers :refer [where]]
             [next.jdbc :as jdbc]
             [next.jdbc.sql :as sql]))
 
@@ -25,19 +25,19 @@
 
 (defn retrieve-and-filter-organizations
   [db filters offset]
-  (let [search-filter (when-let [search (:search filters)]
-                        [:like :name (str "%" search "%")])
-        trashed-filter (case (:trashed filters)
-                         "with" nil
-                         "only" [:<> :deleted_at nil]
-                         [:= :deleted_at nil])
-        all-filters (helpers/where search-filter trashed-filter)
-        query (h/format (merge {:select [:*]
-                                :from [:organizations]
-                                :order-by [:name]
-                                :limit 10
-                                :offset offset}
-                               all-filters))]
+  (let [search (:search filters)
+        trashed (:trashed filters true)
+        query (h/format
+               (cond-> {:select [:*]
+                        :from [:organizations]
+                        :order-by [:name]
+                        :limit 10
+                        :offset offset}
+                 search (where [:like :name (str "%" search "%")])
+                 trashed (where (case trashed
+                                  "with" nil
+                                  "only" [:<> :deleted_at nil]
+                                  [:= :deleted_at nil]))))]
     (jdbc/execute! db query)))
 
 (defn get-organization-by-id

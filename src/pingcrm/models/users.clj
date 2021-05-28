@@ -1,6 +1,6 @@
 (ns pingcrm.models.users
   (:require [honey.sql :as h]
-            [honey.sql.helpers :as helpers]
+            [honey.sql.helpers :refer [where]]
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
             [next.jdbc.sql :as sql]
@@ -15,23 +15,23 @@
 
 (defn retrieve-and-filter-users
   [db filters]
-  (let [search-filter (when-let [search (:search filters)]
-                        [:or [:like :first_name (str "%" search "%")]
-                         [:like :last_name (str "%" search "%")]
-                         [:like :email (str "%" search "%")]])
-        role-filter (when-let [role (:role filters)]
-                      (case role
-                        "owner" [:= :owner true]
-                        "user" [:= :owner false]))
-        trashed-filter (case (:trashed filters)
-                         "with" nil
-                         "only" [:<> :deleted_at nil]
-                         [:= :deleted_at nil])
-        all-filters (helpers/where search-filter role-filter trashed-filter)
-        query (h/format (merge {:select [:id [[:|| :first_name " " :last_name] :name] :email :owner :deleted_at]
-                                :from [:users]
-                                :order-by [:last_name :first_name]}
-                               all-filters))]
+  (let [search (:search filters)
+        role (:role filters)
+        trashed (:trashed filters true)
+        query (h/format
+               (cond-> {:select [:id [[:|| :first_name " " :last_name] :name] :email :owner :deleted_at]
+                        :from [:users]
+                        :order-by [:last_name :first_name]}
+                 search (where [:or [:like :first_name (str "%" search "%")]
+                                [:like :last_name (str "%" search "%")]
+                                [:like :email (str "%" search "%")]])
+                 role (where (case role
+                               "owner" [:= :owner true]
+                               "user" [:= :owner false]))
+                 trashed (where (case trashed
+                                  "with" nil
+                                  "only" [:<> :deleted_at nil]
+                                  [:= :deleted_at nil]))))]
     (jdbc/execute! db query)))
 
 (defn get-user-by-id
