@@ -24,20 +24,18 @@
     (jdbc/execute-one! db query)))
 
 (defn retrieve-and-filter-organizations
-  [db filters offset]
-  (let [search (:search filters)
-        trashed (:trashed filters true)
-        query (h/format
+  [db {:keys [search trashed]} offset]
+  (let [query (h/format
                (cond-> {:select [:*]
                         :from [:organizations]
                         :order-by [:name]
                         :limit 10
                         :offset offset}
                  search (where [:like :name (str "%" search "%")])
-                 trashed (where (case trashed
-                                  "with" nil
-                                  "only" [:<> :deleted_at nil]
-                                  [:= :deleted_at nil]))))]
+                 true (where (case trashed
+                               "with" nil
+                               "only" [:<> :deleted_at nil]
+                               [:= :deleted_at nil]))))]
     (jdbc/execute! db query)))
 
 (defn get-organization-by-id

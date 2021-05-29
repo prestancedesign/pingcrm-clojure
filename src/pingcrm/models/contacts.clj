@@ -14,11 +14,9 @@
     (jdbc/execute-one! db query)))
 
 (defn retrieve-and-filter-contacts
-  [db filters offset]
+  [db {:keys [search trashed]} offset]
   ;;TODO: Add filter by organization name
-  (let [search (:search filters)
-        trashed (:trashed filters true)
-        query (h/format
+  (let [query (h/format
                (cond-> {:select [[:c.*] [[:|| :c.first_name " " :c.last_name] :name] [:o.name :organization]]
                         :from [[:contacts :c]]
                         :left-join [[:organizations :o] [:= :c.organization_id :o.id]]
@@ -28,7 +26,7 @@
                  search (where [:or [:like :c.first_name (str "%" search "%")]
                                 [:like :c.last_name (str "%" search "%")]
                                 [:like :c.email (str "%" search "%")]])
-                 trashed (where (case trashed
+                 true (where (case trashed
                                   "with" nil
                                   "only" [:<> :c.deleted_at nil]
                                   [:= :c.deleted_at nil]))))]

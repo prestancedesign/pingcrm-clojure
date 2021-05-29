@@ -17,7 +17,7 @@
 (def db (-> state/system :database.sql/connection))
 
 (comment
-  (org/retrieve-and-filter-organization db nil 0)
+  (org/retrieve-and-filter-organizations db () 0)
 
   (org/count-organizations db)
 

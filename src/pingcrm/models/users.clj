@@ -14,11 +14,8 @@
       x)))
 
 (defn retrieve-and-filter-users
-  [db filters]
-  (let [search (:search filters)
-        role (:role filters)
-        trashed (:trashed filters true)
-        query (h/format
+  [db {:keys [search role trashed]}]
+  (let [query (h/format
                (cond-> {:select [:id [[:|| :first_name " " :last_name] :name] :email :owner :deleted_at]
                         :from [:users]
                         :order-by [:last_name :first_name]}
@@ -28,10 +25,10 @@
                  role (where (case role
                                "owner" [:= :owner true]
                                "user" [:= :owner false]))
-                 trashed (where (case trashed
-                                  "with" nil
-                                  "only" [:<> :deleted_at nil]
-                                  [:= :deleted_at nil]))))]
+                 true (where (case trashed
+                               "with" nil
+                               "only" [:<> :deleted_at nil]
+                               [:= :deleted_at nil]))))]
     (jdbc/execute! db query)))
 
 (defn get-user-by-id
