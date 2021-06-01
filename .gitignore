@@ -4,3 +4,4 @@
 /node_modules/
 /resources/public/js/cljs-runtime/
 /resources/public/js/manifest.edn
+/resources/public/js/*.js
