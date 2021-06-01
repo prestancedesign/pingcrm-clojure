@@ -4,12 +4,14 @@
             [reagent.dom :as d]
             [pingcrm.pages.dashboard :as dashboard]
             [pingcrm.shared.layout :refer [layout]]
-            [pingcrm.pages.login :refer [login]]))
+            [pingcrm.pages.login :refer [login]]
+            [pingcrm.pages.organizations :as organizations]))
 
 (def el (.getElementById js/document "app"))
 
 (def pages {"Dashboard/Index" dashboard/index
-            "Auth/Login" login})
+            "Auth/Login" login
+            "Organizations/Index" organizations/index})
 
 (defn app []
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
