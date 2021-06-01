@@ -26,7 +26,7 @@
          [icon
           {:class
            "w-5 h-5 text-gray-800 fill-current group-hover:text-indigo-600 focus:text-indigo-600",
-           :name "cheveron-down"}]]
+           :name :cheveron-down}]]
         [:div {:class (when-not @opened? "hidden")}
          [:div
           {:class
