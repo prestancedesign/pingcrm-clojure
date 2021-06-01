@@ -3,17 +3,20 @@
             [reagent.core :as r]
             [reagent.dom :as d]
             [pingcrm.pages.dashboard :as dashboard]
-            [pingcrm.shared.layout :refer [layout]]))
+            [pingcrm.shared.layout :refer [layout]]
+            [pingcrm.pages.login :refer [login]]))
 
 (def el (.getElementById js/document "app"))
 
-(def pages {"Dashboard/Index" dashboard/index})
+(def pages {"Dashboard/Index" dashboard/index
+            "Auth/Login" login})
 
 (defn app []
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
            :resolve-component (fn [name] (let [comp (r/reactify-component (get pages name))]
-                                           (set! (.-layout ^js comp) (fn [page] (r/as-element [layout page])))
-                                           comp))}])
+                                          (when-not (= name "Auth/Login")
+                                            (set! (.-layout ^js comp) (fn [page] (r/as-element [layout page]))))
+                                          comp))}])
 
 (defn mount-root []
   (d/render [app] el))
