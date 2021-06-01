@@ -1,11 +1,14 @@
 (ns pingcrm.app
   (:require ["@inertiajs/inertia-react" :refer [App]]
+            ["@inertiajs/progress" :refer [InertiaProgress]]
             [reagent.core :as r]
             [reagent.dom :as d]
             [pingcrm.pages.dashboard :as dashboard]
             [pingcrm.shared.layout :refer [layout]]
             [pingcrm.pages.login :refer [login]]
             [pingcrm.pages.organizations :as organizations]))
+
+(.init InertiaProgress)
 
 (def el (.getElementById js/document "app"))
 
