@@ -47,10 +47,10 @@
                              :tab-index "-1"
                              :class "flex items-center px-4 focus:outline-none"}
              [icon {:name :cheveron-right
-                    :class "block w-6 h-6 text-gray-400 fill-current"}]]]])]
-       (when (zero? (count data))
-         [:tr
-          [:td {:class "px-6 py-4 border-t"
-                :col-span "4"}
-           "No organization found."]])]]]))
+                    :class "block w-6 h-6 text-gray-400 fill-current"}]]]])
+        (when (zero? (count data))
+          [:tr
+           [:td {:class "px-6 py-4 border-t"
+                 :col-span "4"}
+            "No organizations found."]])]]]]))
      ;; TODO Add pagination]))
