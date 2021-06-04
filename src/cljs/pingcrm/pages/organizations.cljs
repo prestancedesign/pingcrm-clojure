@@ -1,14 +1,16 @@
 (ns pingcrm.pages.organizations
   (:require [applied-science.js-interop :as j]
             ["@inertiajs/inertia-react" :refer [InertiaLink]]
-            [pingcrm.shared.icon :refer [icon]]))
+            [pingcrm.shared.icon :refer [icon]]
+            [pingcrm.shared.search-filter :refer [search-filter]]))
 
 (defn index
   [{:keys [organizations]}]
   (let [{:keys [data links]} (j/lookup organizations)]
     [:div
      [:h1 {:class "mb-8 text-3xl font-bold"} "Organizations"]
-     [:div {:class "flex items-center justify-between mb-6"} [:searchfilter] ; TODO Add search filter
+     [:div {:class "flex items-center justify-between mb-6"}
+      [:f> search-filter] ; TODO Add search filter
       [:> InertiaLink
        {:class "btn-indigo focus:outline-none",
         :href (js/route "organizations.create")} [:span "Create "]

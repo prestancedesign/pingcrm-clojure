@@ -1,6 +1,5 @@
 (ns pingcrm.shared.layout
   (:require [pingcrm.shared.menu :refer [main-menu]]
-            ["@inertiajs/inertia-react" :refer [InertiaLink]]
             [pingcrm.shared.top-header :refer [top-header]]
             [pingcrm.shared.bottom-header :refer [bottom-header]]))
 
