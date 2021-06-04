@@ -10,7 +10,7 @@
     [:div
      [:h1 {:class "mb-8 text-3xl font-bold"} "Organizations"]
      [:div {:class "flex items-center justify-between mb-6"}
-      [:f> search-filter] ; TODO Add search filter
+      [:f> search-filter]
       [:> InertiaLink
        {:class "btn-indigo focus:outline-none",
         :href (js/route "organizations.create")} [:span "Create "]
