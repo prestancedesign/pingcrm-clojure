@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "@inertiajs/inertia": "^0.9.0",
-    "@inertiajs/inertia-react": "^0.6.0",
+    "@inertiajs/inertia": "^0.9.1",
+    "@inertiajs/inertia-react": "^0.6.2",
     "@inertiajs/progress": "^0.2.5",
     "react": "17.0.1",
     "react-dom": "17.0.1"
