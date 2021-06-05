@@ -1,20 +1,21 @@
 (ns pingcrm.pages.login
-  (:require [pingcrm.shared.logo :refer [logo]]
-            [pingcrm.shared.text-input :refer [text-input]]
+  (:require ["@inertiajs/inertia-react" :refer [useForm]]
+            [applied-science.js-interop :as j]
             [pingcrm.shared.loading-button :refer [loading-button]]
-            ["@inertiajs/inertia-react" :refer [useForm]]
-            [applied-science.js-interop :as j]))
+            [pingcrm.shared.logo :refer [logo]]
+            [pingcrm.shared.text-input :refer [text-input]]))
 
 (defn login-form []
-  (let [{:keys [data setData errors post processing]} (j/lookup (useForm #js {:email "johndoe@example.com"
-                                                                              :password "secret"
-                                                                              :remember false}))
-        handle-submit #(do (.preventDefault %)
-                           (post (js/route "login.store")))]
+  (let [{:keys [data setData errors post processing]} (j/lookup
+                                                       (useForm #js {:email "johndoe@example.com"
+                                                                     :password "secret"
+                                                                     :remember false}))
+        on-submit #(do (.preventDefault %)
+                       (post (js/route "login.store")))]
     [:div {:class "p-6 bg-indigo-800 min-h-screen flex justify-center items-center"}
      [:div {:class "w-full max-w-md"}
       [logo {:class "block mx-auto w-full max-w-xs fill-white" :height "50"}]
-      [:form {:on-submit handle-submit
+      [:form {:on-submit on-submit
               :class "mt-8 overflow-hidden bg-white rounded-lg shadow-xl"}
        [:div {:class "px-10 py-12"}
         [:h1 {:class "text-3xl font-bold text-center"} "Welcome Back!"]
