@@ -2,7 +2,8 @@
   (:require [applied-science.js-interop :as j]
             ["@inertiajs/inertia-react" :refer [InertiaLink]]
             [pingcrm.shared.icon :refer [icon]]
-            [pingcrm.shared.search-filter :refer [search-filter]]))
+            [pingcrm.shared.search-filter :refer [search-filter]]
+            [pingcrm.shared.pagination :refer [pagination]]))
 
 (defn index
   [{:keys [organizations]}]
@@ -54,5 +55,5 @@
           [:tr
            [:td {:class "px-6 py-4 border-t"
                  :col-span "4"}
-            "No organizations found."]])]]]]))
-     ;; TODO Add pagination]))
+            "No organizations found."]])]]]
+     [pagination links]]))
