@@ -15,7 +15,8 @@
 (def pages {"Dashboard/Index" dashboard/index
             "Auth/Login" login
             "Organizations/Index" organizations/index
-            "Organizations/Create" organizations/create})
+            "Organizations/Create" organizations/create
+            "Organizations/Edit" organizations/edit})
 
 (defn app []
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
