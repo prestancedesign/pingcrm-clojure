@@ -1,7 +1,8 @@
 (ns pingcrm.shared.layout
   (:require [pingcrm.shared.menu :refer [main-menu]]
             [pingcrm.shared.top-header :refer [top-header]]
-            [pingcrm.shared.bottom-header :refer [bottom-header]]))
+            [pingcrm.shared.bottom-header :refer [bottom-header]]
+            [pingcrm.shared.flash-messages :refer [flash-messages]]))
 
 (defn layout
   [children]
@@ -19,5 +20,5 @@
       ;; To reset scroll region (https://inertiajs.com/pages#scroll-regions) add
       ;; `scroll-region="true"` to div below
       [:div {:class "w-full px-4 py-8 overflow-hidden overflow-y-auto md:p-12"}
-       ;;[:flashmessages]
+       [:f> flash-messages]
        children]]]]])
