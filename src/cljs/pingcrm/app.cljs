@@ -6,7 +6,8 @@
             [pingcrm.pages.dashboard :as dashboard]
             [pingcrm.shared.layout :refer [layout]]
             [pingcrm.pages.login :refer [login]]
-            [pingcrm.pages.organizations :as organizations]))
+            [pingcrm.pages.organizations :as organizations]
+            [pingcrm.pages.reports :as reports]))
 
 (.init InertiaProgress)
 
@@ -14,6 +15,7 @@
 
 (def pages {"Dashboard/Index" dashboard/index
             "Auth/Login" login
+            "Reports/Index" reports/index
             "Organizations/Index" organizations/index
             "Organizations/Create" organizations/create
             "Organizations/Edit" organizations/edit})
