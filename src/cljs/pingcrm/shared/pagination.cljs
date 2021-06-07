@@ -8,7 +8,7 @@
    [:label {:dangerouslySetInnerHTML {:__html label}}]])
 
 (defn page-inactive [{:keys [label]}]
-  [:div {:class "mr-1 mb-1 px-4 py-3 text-sm border rounded border-solid border-gray-300 text-gray"
+  [:div {:class "mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
          :dangerouslySetInnerHTML {:__html label}}])
 
 (defn pagination [links]
