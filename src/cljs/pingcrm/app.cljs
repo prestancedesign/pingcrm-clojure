@@ -7,6 +7,7 @@
             [pingcrm.shared.layout :refer [layout]]
             [pingcrm.pages.login :refer [login]]
             [pingcrm.pages.organizations :as organizations]
+            [pingcrm.pages.contacts :as contacts]
             [pingcrm.pages.reports :as reports]))
 
 (.init InertiaProgress)
@@ -18,7 +19,10 @@
             "Reports/Index" reports/index
             "Organizations/Index" organizations/index
             "Organizations/Create" organizations/create
-            "Organizations/Edit" organizations/edit})
+            "Organizations/Edit" organizations/edit
+            "Contacts/Index" contacts/index
+            "Contacts/Create" contacts/create
+            "Contacts/Edit" contacts/edit})
 
 (defn app []
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
