@@ -10,7 +10,7 @@
   (let [query (into {} (filter (comp not-empty val) values))
         options #js {:replace true
                      :preserveState true}]
-    (.get Inertia (js/route "organizations") (clj->js query) options)))
+    (.get Inertia (.current (js/route)) (clj->js query) options)))
 
 (defn search-filter []
   (let [{:keys [filters]} (j/lookup (.-props (usePage)))
