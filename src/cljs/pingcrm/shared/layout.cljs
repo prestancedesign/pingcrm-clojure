@@ -14,9 +14,8 @@
       [top-header]
       [:f> bottom-header]]
      [:div {:class "flex flex-grow overflow-hidden"}
-      [main-menu
-       {:class
-          "flex-shrink-0 hidden w-56 p-12 overflow-y-auto bg-indigo-800 md:block"}]
+      ;;TODO: Add mobile menu
+      [:f> main-menu {:class "flex-shrink-0 hidden w-56 p-12 overflow-y-auto bg-indigo-800 md:block"}]
       ;; To reset scroll region (https://inertiajs.com/pages#scroll-regions) add
       ;; `scroll-region="true"` to div below
       [:div {:class "w-full px-4 py-8 overflow-hidden overflow-y-auto md:p-12"}
