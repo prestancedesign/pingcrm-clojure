@@ -193,7 +193,7 @@
        "Contacts"]
       [:span {:class "mx-2 font-medium text-indigo-600"}
        "/"]
-      (str (.-first_name data) " " (.-last_name data))]
+      (.-first_name data) " " (.-last_name data)]
      (when-not (empty? (.-deleted_at contact))
        [trashed-message {:on-restore restore}
         "This contact has been deleted."])
