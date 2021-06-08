@@ -8,7 +8,8 @@
             [pingcrm.pages.login :refer [login]]
             [pingcrm.pages.organizations :as organizations]
             [pingcrm.pages.contacts :as contacts]
-            [pingcrm.pages.reports :as reports]))
+            [pingcrm.pages.reports :as reports]
+            [pingcrm.pages.users :as users]))
 
 (.init InertiaProgress)
 
@@ -22,9 +23,10 @@
             "Organizations/Edit" organizations/edit
             "Contacts/Index" contacts/index
             "Contacts/Create" contacts/create
-            "Contacts/Edit" contacts/edit})
+            "Contacts/Edit" contacts/edit
+            "Users/Index" users/index})
 
-(defn app []
+(def app
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
            :resolve-component (fn [name] (let [comp (r/reactify-component (get pages name))]
                                           (when-not (= name "Auth/Login")
@@ -32,7 +34,7 @@
                                           comp))}])
 
 (defn mount-root []
-  (d/render [app] el))
+  (d/render app el))
 
 (defn init! []
   (mount-root))
