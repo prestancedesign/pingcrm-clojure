@@ -24,7 +24,8 @@
             "Contacts/Index" contacts/index
             "Contacts/Create" contacts/create
             "Contacts/Edit" contacts/edit
-            "Users/Index" users/index})
+            "Users/Index" users/index
+            "Users/Edit" users/edit})
 
 (def app
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
