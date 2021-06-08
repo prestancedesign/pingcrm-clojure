@@ -115,7 +115,8 @@
          [:option {:value ""}]
          (for [organization organizations
                :let [{:keys [id name]} (j/lookup organization)]]
-           [:option {:value id} name])]
+           [:option {:value id
+                     :key id} name])]
         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
                      :label "Email"
                      :name "email"
@@ -221,7 +222,7 @@
          [:option {:value ""}]
          (for [organization organizations
                :let [{:keys [id name]} (j/lookup organization)]]
-           [:option {:value id} name])]
+           [:option {:key id :value id} name])]
         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
                      :label "Email"
                      :name "email"
