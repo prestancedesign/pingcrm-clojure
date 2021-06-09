@@ -1,6 +1,6 @@
 (ns pingcrm.pages.users
   (:require ["@inertiajs/inertia" :refer [Inertia]]
-            ["@inertiajs/inertia-react" :refer [InertiaLink useForm usePage]]
+            ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
             [pingcrm.shared.delete-button :refer [delete-button]]
             [pingcrm.shared.icon :refer [icon]]
@@ -118,9 +118,8 @@
                           :class "btn-indigo"}
           "Create User"]]]]]]))
 
-(defn edit-form []
-  (let [{:keys [user]} (j/lookup (.-props (usePage)))
-        {:keys [data setData errors post processing]}
+(defn edit-form [^js user]
+  (let [{:keys [data setData errors post processing]}
         (j/lookup (useForm #js {:first_name (or (.-first_name user) "")
                                 :last_name (or (.-last_name user) "")
                                 :email (or (.-email user) "")
@@ -191,5 +190,5 @@
 (defn create []
   [:f> create-form])
 
-(defn edit []
-  [:f> edit-form])
+(defn edit [{:keys [user]}]
+  [:f> edit-form user])

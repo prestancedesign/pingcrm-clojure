@@ -1,6 +1,6 @@
 (ns pingcrm.pages.contacts
   (:require ["@inertiajs/inertia" :refer [Inertia]]
-            ["@inertiajs/inertia-react" :refer [InertiaLink useForm usePage]]
+            ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
             [pingcrm.shared.delete-button :refer [delete-button]]
             [pingcrm.shared.icon :refer [icon]]
@@ -69,20 +69,18 @@
             "No contacts found."]])]]]
      [pagination links]]))
 
-(defn create-form []
-  (let [{:keys [organizations]} (j/lookup (.-props (usePage)))
-        {:keys [data setData errors post processing]}
-        (j/lookup
-         (useForm #js {:first_name ""
-                       :last_name ""
-                       :organization_id ""
-                       :email ""
-                       :phone ""
-                       :address ""
-                       :city ""
-                       :region ""
-                       :country ""
-                       :postal_code ""}))
+(defn create-form [^js organizations]
+  (let [{:keys [data setData errors post processing]}
+        (j/lookup (useForm #js {:first_name ""
+                                :last_name ""
+                                :organization_id ""
+                                :email ""
+                                :phone ""
+                                :address ""
+                                :city ""
+                                :region ""
+                                :country ""
+                                :postal_code ""}))
         on-submit #(do (.preventDefault %)
                        (post (js/route "contacts.store")))]
     [:div
@@ -169,9 +167,8 @@
                          :class "btn-indigo"}
          "Create Contact"]]]]]))
 
-(defn edit-form []
-  (let [{:keys [contact organizations]} (j/lookup (.-props (usePage)))
-        {:keys [data setData errors put processing]}
+(defn edit-form [^js contact ^js organizations]
+  (let [{:keys [data setData errors put processing]}
         (j/lookup (useForm #js {:first_name (or (.-first_name contact) "")
                                 :last_name (or (.-last_name contact) "")
                                 :organization_id (or (.-organization_id contact) "")
@@ -279,8 +276,8 @@
                          :class "ml-auto btn-indigo"}
          "Update Contact"]]]]]))
 
-(defn edit []
-  [:f> edit-form])
+(defn edit [{:keys [contact organizations]}]
+  [:f> edit-form contact organizations])
 
-(defn create []
-  [:f> create-form])
+(defn create [{:keys [organizations]}]
+  [:f> create-form organizations])

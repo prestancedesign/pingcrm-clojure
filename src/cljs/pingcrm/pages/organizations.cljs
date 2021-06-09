@@ -1,6 +1,6 @@
 (ns pingcrm.pages.organizations
   (:require ["@inertiajs/inertia" :refer [Inertia]]
-            ["@inertiajs/inertia-react" :refer [InertiaLink useForm usePage]]
+            ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
             [pingcrm.shared.delete-button :refer [delete-button]]
             [pingcrm.shared.icon :refer [icon]]
@@ -65,15 +65,15 @@
      [pagination links]]))
 
 (defn create-form []
-  (let [{:keys [data setData errors post processing]} (j/lookup
-                                                       (useForm #js {:name ""
-                                                                     :email ""
-                                                                     :phone ""
-                                                                     :address ""
-                                                                     :city ""
-                                                                     :region ""
-                                                                     :country ""
-                                                                     :postal_code ""}))
+  (let [{:keys [data setData errors post processing]}
+        (j/lookup (useForm #js {:name ""
+                                :email ""
+                                :phone ""
+                                :address ""
+                                :city ""
+                                :region ""
+                                :country ""
+                                :postal_code ""}))
         on-submit #(do (.preventDefault %)
                        (post (js/route "organizations.store")))]
     [:div
@@ -143,9 +143,8 @@
                          :class "btn-indigo"}
          "Create Organization"]]]]]))
 
-(defn edit-form []
-  (let [{:keys [organization]} (j/lookup (.-props (usePage)))
-        {:keys [data setData errors put processing]}
+(defn edit-form [^js organization]
+  (let [{:keys [data setData errors put processing]}
         (j/lookup (useForm #js {:name (or (.-name organization) "")
                                 :email (or (.-email organization) "")
                                 :phone (or (.-phone organization) "")
@@ -276,8 +275,8 @@
                  :col-span "4"}
             "No contacts found."]])]]]]))
 
-(defn edit []
-  [:f> edit-form])
+(defn edit [{:keys [organization]}]
+  [:f> edit-form organization])
 
 (defn create []
   [:f> create-form])
