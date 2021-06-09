@@ -9,7 +9,7 @@
   [[:first_name st/required st/string]
    [:last_name st/required st/string]
    [:email st/required st/email]
-   [:owner st/required st/boolean]])
+   [:owner st/required st/boolean-str]])
 
 (defn validate-unique-user
   [db params]
