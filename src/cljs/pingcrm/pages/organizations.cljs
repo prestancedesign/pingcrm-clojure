@@ -2,17 +2,19 @@
   (:require ["@inertiajs/inertia" :refer [Inertia]]
             ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
-            [pingcrm.shared.icon :refer [icon]]
             [pingcrm.shared.buttons :refer [loading-button delete-button]]
+            [pingcrm.shared.form-input :refer [text-input select-input]]
+            [pingcrm.shared.icon :refer [icon]]
             [pingcrm.shared.pagination :refer [pagination]]
             [pingcrm.shared.search-filter :refer [search-filter]]
-            [pingcrm.shared.form-input :refer [text-input select-input]]
+            [pingcrm.shared.site-head :refer [site-head]]
             [pingcrm.shared.trashed-message :refer [trashed-message]]))
 
 (defn index
   [{:keys [organizations]}]
   (let [{:keys [data links]} (j/lookup organizations)]
     [:div
+     [site-head {:title "Organizations"}]
      [:h1 {:class "mb-8 text-3xl font-bold"} "Organizations"]
      [:div {:class "flex items-center justify-between mb-6"}
       [:f> search-filter]
@@ -75,6 +77,7 @@
         on-submit #(do (.preventDefault %)
                        (post (js/route "organizations.store")))]
     [:div
+     [site-head {:title "Create Organization"}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
       [:> InertiaLink {:href (js/route "organizations")
                        :class "text-indigo-400 hover:text-indigo-600"}
@@ -158,6 +161,7 @@
         restore #(when (js/confirm "Are you sure you want to restore this organization?")
                    (.put Inertia (js/route "organizations.restore" (.-id organization))))]
     [:div
+     [site-head {:title (j/get organization :name)}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
       [:> InertiaLink {:href (js/route "organizations")
                        :class "text-indigo-600 hover:text-indigo-700"}

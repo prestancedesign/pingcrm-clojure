@@ -2,16 +2,18 @@
   (:require ["@inertiajs/inertia" :refer [Inertia]]
             ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
-            [pingcrm.shared.icon :refer [icon]]
             [pingcrm.shared.buttons :refer [loading-button delete-button]]
+            [pingcrm.shared.form-input :refer [text-input select-input]]
+            [pingcrm.shared.icon :refer [icon]]
             [pingcrm.shared.pagination :refer [pagination]]
             [pingcrm.shared.search-filter :refer [search-filter]]
-            [pingcrm.shared.form-input :refer [text-input select-input]]
+            [pingcrm.shared.site-head :refer [site-head]]
             [pingcrm.shared.trashed-message :refer [trashed-message]]))
 
 (defn index [{:keys [contacts]}]
   (let [{:keys [data links]} (j/lookup contacts)]
     [:div
+     [site-head {:title "Contacts"}]
      [:h1 {:class "mb-8 text-3xl font-bold"} "Contacts"]
      [:div {:class "flex items-center justify-between mb-6"}
       [:f> search-filter]
@@ -82,6 +84,7 @@
         on-submit #(do (.preventDefault %)
                        (post (js/route "contacts.store")))]
     [:div
+     [site-head {:title "Create Contact"}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
       [:> InertiaLink {:href (js/route "contacts")
                        :class "text-indigo-400 hover:text-indigo-600"}
@@ -184,6 +187,7 @@
         restore #(when (js/confirm "Are you sure you want to restore this contact?")
                    (.put Inertia (js/route "contacts.restore" (.-id contact))))]
     [:div
+     [site-head {:title (str (j/get contact :first_name) " " (j/get contact :last_name))}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
       [:> InertiaLink {:href (js/route "contacts")
                        :class "text-indigo-600 hover:text-indigo-700"}

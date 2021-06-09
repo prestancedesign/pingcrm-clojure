@@ -8,7 +8,6 @@
     [:meta {:charset "utf-8"}]
     [:link {:rel "icon" :type "image/svg+xml" :href "/favicon.svg"}]
     [:meta {:name "viewport" :content "width=device-width, initial-scale=1.0"}]
-    [:title "PingCRM Inertia Clojure"]
     (page/include-css "/css/app.css")
     [:script {:src "/js/ziggy.js"}]
     [:script {:src "/js/app.js" :defer true}]]

@@ -2,14 +2,16 @@
   (:require ["@inertiajs/inertia" :refer [Inertia]]
             ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
-            [pingcrm.shared.icon :refer [icon]]
             [pingcrm.shared.buttons :refer [loading-button delete-button]]
-            [pingcrm.shared.search-filter :refer [search-filter]]
             [pingcrm.shared.form-input :refer [text-input select-input]]
+            [pingcrm.shared.icon :refer [icon]]
+            [pingcrm.shared.search-filter :refer [search-filter]]
+            [pingcrm.shared.site-head :refer [site-head]]
             [pingcrm.shared.trashed-message :refer [trashed-message]]))
 
 (defn index [{:keys [users]}]
   [:div
+   [site-head {:title "Users"}]
    [:h1 {:class "mb-8 text-3xl font-bold"} "Users"]
    [:div {:class "flex items-center justify-between mb-6"}
     [:f> search-filter]
@@ -68,53 +70,53 @@
         on-submit #(do (.preventDefault %)
                        (post (js/route "users.store")))]
     [:div
-     [:div
-      [:h1 {:class "mb-8 text-3xl font-bold"}
-       [:> InertiaLink {:href (js/route "users")
-                        :class "text-indigo-400 hover:text-indigo-600"}
-        "Users" [:span {:class "font-medium text-indigo-400"} " / "]]
-       "Create"]
-      [:div {:class "max-w-3xl overflow-hidden bg-white rounded shadow"}
-       [:form {:on-submit on-submit}
-        [:div {:class "flex flex-wrap p-8 -mb-8 -mr-6"}
-         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
-                      :label "First name"
-                      :name "first_name"
-                      :errors (.-first_name errors)
-                      :value (.-first_name data)
-                      :on-change #(setData "first_name" (.. % -target -value))}]
-         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
-                      :label "Last name"
-                      :name "last_name"
-                      :errors (.-last_name errors)
-                      :value (.-last_name data)
-                      :on-change #(setData "last_name" (.. % -target -value))}]
-         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
-                      :label "Email"
-                      :name "email"
-                      :errors (.-email errors)
-                      :value (.-email data)
-                      :on-change #(setData "email" (.. % -target -value))}]
-         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
-                      :label "Password"
-                      :name "password"
-                      :type "password"
-                      :errors (.-password errors)
-                      :value (.-password data)
-                      :on-change #(setData "password" (.. % -target -value))}]
-         [select-input {:class "w-full pb-8 pr-6 lg:w-1/2"
-                        :label "Owner"
-                        :name "owner"
-                        :errors (.-owner errors)
-                        :value (.-owner data)
-                        :on-change #(setData "country" (.. % -target -value))}
-          [:option {:value "1"} "Yes"]
-          [:option {:value "0"} "No"]]]
-        [:div {:class "px-8 py-4 bg-gray-50 border-t border-gray-100 flex justify-end items-center"}
-         [loading-button {:loading processing
-                          :type "submit"
-                          :class "btn-indigo"}
-          "Create User"]]]]]]))
+     [site-head {:title "Create User"}]
+     [:h1 {:class "mb-8 text-3xl font-bold"}
+      [:> InertiaLink {:href (js/route "users")
+                       :class "text-indigo-400 hover:text-indigo-600"}
+       "Users" [:span {:class "font-medium text-indigo-400"} " / "]]
+      "Create"]
+     [:div {:class "max-w-3xl overflow-hidden bg-white rounded shadow"}
+      [:form {:on-submit on-submit}
+       [:div {:class "flex flex-wrap p-8 -mb-8 -mr-6"}
+        [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                     :label "First name"
+                     :name "first_name"
+                     :errors (.-first_name errors)
+                     :value (.-first_name data)
+                     :on-change #(setData "first_name" (.. % -target -value))}]
+        [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                     :label "Last name"
+                     :name "last_name"
+                     :errors (.-last_name errors)
+                     :value (.-last_name data)
+                     :on-change #(setData "last_name" (.. % -target -value))}]
+        [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                     :label "Email"
+                     :name "email"
+                     :errors (.-email errors)
+                     :value (.-email data)
+                     :on-change #(setData "email" (.. % -target -value))}]
+        [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                     :label "Password"
+                     :name "password"
+                     :type "password"
+                     :errors (.-password errors)
+                     :value (.-password data)
+                     :on-change #(setData "password" (.. % -target -value))}]
+        [select-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                       :label "Owner"
+                       :name "owner"
+                       :errors (.-owner errors)
+                       :value (.-owner data)
+                       :on-change #(setData "country" (.. % -target -value))}
+         [:option {:value "1"} "Yes"]
+         [:option {:value "0"} "No"]]]
+       [:div {:class "px-8 py-4 bg-gray-50 border-t border-gray-100 flex justify-end items-center"}
+        [loading-button {:loading processing
+                         :type "submit"
+                         :class "btn-indigo"}
+         "Create User"]]]]]))
 
 (defn edit-form [^js user]
   (let [{:keys [data setData errors post processing]}
@@ -130,6 +132,7 @@
         restore #(when (js/confirm "Are you sure you want to restore this user?")
                    (.put Inertia (js/route "users.restore" (.-id user))))]
     [:<>
+     [site-head {:title (str (j/get user :first_name) " " (j/get user :last_name))}]
      [:div {:class "flex justify-start max-w-lg mb-8"}
       [:h1 {:class "text-3xl font-bold"}
        [:> InertiaLink {:class "text-indigo-400 hover:text-indigo-700"

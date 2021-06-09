@@ -1,13 +1,12 @@
 (ns pingcrm.shared.layout
-  (:require [pingcrm.shared.menu :refer [main-menu]]
-            [pingcrm.shared.top-header :refer [top-header]]
-            [pingcrm.shared.bottom-header :refer [bottom-header]]
-            [pingcrm.shared.flash-messages :refer [flash-messages]]))
+  (:require [pingcrm.shared.bottom-header :refer [bottom-header]]
+            [pingcrm.shared.flash-messages :refer [flash-messages]]
+            [pingcrm.shared.menu :refer [main-menu]]
+            [pingcrm.shared.top-header :refer [top-header]]))
 
 (defn layout
   [children]
   [:div
-   ;[:helmet {:title "{title}", :titletemplate "%s | Ping CRM"}]
    [:div {:class "md:flex md:flex-col"}
     [:div {:class "md:h-screen md:flex md:flex-col"}
      [:div {:class "md:flex md:flex-shrink-0"}
