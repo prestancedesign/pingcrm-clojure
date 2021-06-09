@@ -1,4 +1,4 @@
-(ns pingcrm.shared.loading-button)
+(ns pingcrm.shared.buttons)
 
 (defn loading-button [{:keys [loading class]} & children]
   (let [class (str class " flex items-center focus:outline-none"
@@ -7,3 +7,11 @@
               :disabled loading}
      (when loading [:div.mr-2.btn-spinner])
      children]))
+
+(defn delete-button [{:keys [on-delete]} & children]
+  (into
+   [:button {:class "text-red-600 focus:outline-none hover:underline"
+             :tab-index "-1"
+             :type "button"
+             :on-click on-delete}]
+   children))

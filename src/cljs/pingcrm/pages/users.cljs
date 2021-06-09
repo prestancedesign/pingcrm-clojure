@@ -2,12 +2,10 @@
   (:require ["@inertiajs/inertia" :refer [Inertia]]
             ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
             [applied-science.js-interop :as j]
-            [pingcrm.shared.delete-button :refer [delete-button]]
             [pingcrm.shared.icon :refer [icon]]
-            [pingcrm.shared.loading-button :refer (loading-button)]
+            [pingcrm.shared.buttons :refer [loading-button delete-button]]
             [pingcrm.shared.search-filter :refer [search-filter]]
-            [pingcrm.shared.select-input :refer [select-input]]
-            [pingcrm.shared.text-input :refer [text-input]]
+            [pingcrm.shared.form-input :refer [text-input select-input]]
             [pingcrm.shared.trashed-message :refer [trashed-message]]))
 
 (defn index [{:keys [users]}]

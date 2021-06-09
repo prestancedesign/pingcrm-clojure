@@ -1,9 +1,9 @@
 (ns pingcrm.pages.login
   (:require ["@inertiajs/inertia-react" :refer [useForm]]
             [applied-science.js-interop :as j]
-            [pingcrm.shared.loading-button :refer [loading-button]]
+            [pingcrm.shared.buttons :refer [loading-button]]
             [pingcrm.shared.logo :refer [logo]]
-            [pingcrm.shared.text-input :refer [text-input]]))
+            [pingcrm.shared.form-input :refer [text-input]]))
 
 (defn login-form []
   (let [{:keys [data setData errors post processing]} (j/lookup

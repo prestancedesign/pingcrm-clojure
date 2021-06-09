@@ -3,7 +3,7 @@
             ["@inertiajs/inertia-react" :refer [usePage]]
             [applied-science.js-interop :as j]
             [goog.functions :refer [throttle]]
-            [pingcrm.shared.select-input :refer [select-input]]
+            [pingcrm.shared.form-input :refer [text-input select-input]]
             [reagent.core :as r]))
 
 (defn filters-query [values]
