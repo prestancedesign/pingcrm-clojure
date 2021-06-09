@@ -28,7 +28,7 @@
             "Users/Create" users/create
             "Users/Edit" users/edit})
 
-(def app
+(defn app []
   [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
            :resolve-component (fn [name] (let [comp (r/reactify-component (get pages name))]
                                           (when-not (= name "Auth/Login")
@@ -36,7 +36,7 @@
                                           comp))}])
 
 (defn mount-root []
-  (d/render app el))
+  (d/render [app] el))
 
 (defn init! []
   (mount-root))
