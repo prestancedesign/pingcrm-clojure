@@ -58,18 +58,76 @@
         [:tr
          [:td {:class "px-6 py-4 border-t"
                :col-span "4"}
-          "No contacts found."]])]]]])
+          "No Users found."]])]]]])
+
+(defn create-form []
+  (let [{:keys [data setData errors post processing]}
+        (j/lookup (useForm #js {:first_name ""
+                                :last_name ""
+                                :email ""
+                                :password ""
+                                :owner "0"}))
+        on-submit #(do (.preventDefault %)
+                       (post (js/route "users.store")))]
+    [:div
+     [:div
+      [:h1 {:class "mb-8 text-3xl font-bold"}
+       [:> InertiaLink {:href (js/route "users")
+                        :class "text-indigo-400 hover:text-indigo-600"}
+        "Users" [:span {:class "font-medium text-indigo-400"} " / "]]
+       "Create"]
+      [:div {:class "max-w-3xl overflow-hidden bg-white rounded shadow"}
+       [:form {:on-submit on-submit}
+        [:div {:class "flex flex-wrap p-8 -mb-8 -mr-6"}
+         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                      :label "First name"
+                      :name "first_name"
+                      :errors (.-first_name errors)
+                      :value (.-first_name data)
+                      :on-change #(setData "first_name" (.. % -target -value))}]
+         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                      :label "Last name"
+                      :name "last_name"
+                      :errors (.-last_name errors)
+                      :value (.-last_name data)
+                      :on-change #(setData "last_name" (.. % -target -value))}]
+         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                      :label "Email"
+                      :name "email"
+                      :errors (.-email errors)
+                      :value (.-email data)
+                      :on-change #(setData "email" (.. % -target -value))}]
+         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                      :label "Password"
+                      :name "password"
+                      :type "password"
+                      :errors (.-password errors)
+                      :value (.-password data)
+                      :on-change #(setData "password" (.. % -target -value))}]
+         [select-input {:class "w-full pb-8 pr-6 lg:w-1/2"
+                        :label "Owner"
+                        :name "owner"
+                        :errors (.-owner errors)
+                        :value (.-owner data)
+                        :on-change #(setData "country" (.. % -target -value))}
+          [:option {:value "1"} "Yes"]
+          [:option {:value "0"} "No"]]]
+        [:div {:class "px-8 py-4 bg-gray-50 border-t border-gray-100 flex justify-end items-center"}
+         [loading-button {:loading processing
+                          :type "submit"
+                          :class "btn-indigo"}
+          "Create User"]]]]]]))
 
 (defn edit-form []
   (let [{:keys [user]} (j/lookup (.-props (usePage)))
-        {:keys [data setData errors put processing]}
+        {:keys [data setData errors post processing]}
         (j/lookup (useForm #js {:first_name (or (.-first_name user) "")
                                 :last_name (or (.-last_name user) "")
                                 :email (or (.-email user) "")
                                 :password (or (.-password user) "")
-                                :owner (or (if (.-owner user) "1" "0") "")}))
+                                :owner (or (if (.-owner user) "1" "0") "0")}))
         on-submit #(do (.preventDefault %)
-                       (put (js/route "contacts.update" (.-id user))))
+                       (post (js/route "users.update" (.-id user))))
         destroy #(when (js/confirm "Are you sure you want to delete this user?")
                    (.delete Inertia (js/route "users.destroy" (.-id user))))
         restore #(when (js/confirm "Are you sure you want to restore this user?")
@@ -102,7 +160,6 @@
         [text-input {:class "w-full pb-8 pr-6 lg:w-1/2"
                      :label "Email"
                      :name "email"
-                     :type "email"
                      :errors (.-email errors)
                      :value (.-email data)
                      :on-change #(setData "email" (.. % -target -value))}]
@@ -130,6 +187,9 @@
                          :type "submit"
                          :class "ml-auto btn-indigo"}
          "Update User"]]]]]))
+
+(defn create []
+  [:f> create-form])
 
 (defn edit []
   [:f> edit-form])

@@ -25,6 +25,7 @@
             "Contacts/Create" contacts/create
             "Contacts/Edit" contacts/edit
             "Users/Index" users/index
+            "Users/Create" users/create
             "Users/Edit" users/edit})
 
 (def app
