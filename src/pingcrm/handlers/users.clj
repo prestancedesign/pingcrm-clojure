@@ -21,7 +21,9 @@
 
 (defn get-users [db]
   (fn [{:keys [params]}]
-    (let [filters (select-keys params [:search :role :trashed])
+    (let [filters {:search (:search params)
+                   :role (:role params)
+                   :trashed (:trashed params)}
           props {:users (db/retrieve-and-filter-users db filters)
                  :filters filters}]
       (inertia/render "Users/Index" props))))
