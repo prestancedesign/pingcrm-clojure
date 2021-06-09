@@ -23,7 +23,6 @@
         [text-input {:class "mt-10"
                      :label "Email"
                      :name "email"
-                     :type "email"
                      :errors (.-email errors)
                      :value (.-email data)
                      :on-change #(setData "email" (.. % -target -value))}]

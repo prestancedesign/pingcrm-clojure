@@ -45,7 +45,7 @@
             [:> InertiaLink {:href (js/route "contacts.edit" id)
                              :tab-index "-1"
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
-             (when organization (.-name organization))]]
+             (when organization (j/get organization :name))]]
            [:td {:class "border-t"}
             [:> InertiaLink {:href (js/route "contacts.edit" id)
                              :tab-index "-1"
@@ -71,17 +71,18 @@
 
 (defn create-form []
   (let [{:keys [organizations]} (j/lookup (.-props (usePage)))
-        {:keys [data setData errors post processing]} (j/lookup
-                                                       (useForm #js {:first_name ""
-                                                                     :last_name ""
-                                                                     :organization_id ""
-                                                                     :email ""
-                                                                     :phone ""
-                                                                     :address ""
-                                                                     :city ""
-                                                                     :region ""
-                                                                     :country ""
-                                                                     :postal_code ""}))
+        {:keys [data setData errors post processing]}
+        (j/lookup
+         (useForm #js {:first_name ""
+                       :last_name ""
+                       :organization_id ""
+                       :email ""
+                       :phone ""
+                       :address ""
+                       :city ""
+                       :region ""
+                       :country ""
+                       :postal_code ""}))
         on-submit #(do (.preventDefault %)
                        (post (js/route "contacts.store")))]
     [:div
@@ -195,7 +196,7 @@
       [:span {:class "mx-2 font-medium text-indigo-600"}
        "/"]
       (.-first_name data) " " (.-last_name data)]
-     (when-not (empty? (.-deleted_at contact))
+     (when-not (empty? (j/get contact :deleted_at))
        [trashed-message {:on-restore restore}
         "This contact has been deleted."])
      [:div {:class "max-w-3xl overflow-hidden bg-white rounded shadow"}
@@ -270,7 +271,7 @@
                      :value (.-postal_code data)
                      :on-change #(setData "postal_code" (.. % -target -value))}]]
        [:div {:class "flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200"}
-        (when (empty? (.-deleted_at contact))
+        (when (empty? (j/get contact :deleted_at))
           [delete-button {:on-delete destroy}
            "Delete Contact"])
         [loading-button {:loading processing

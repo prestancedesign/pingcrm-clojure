@@ -39,12 +39,12 @@
      #js [flash errors]) ; TODO Check if parameters is working
 
     (cond
-      (and (not-empty (.-success flash)) visible)
+      (and (not-empty (j/get flash :success)) visible)
       [:div {:class "mb-8 flex items-center justify-between bg-green-500 rounded max-w-3xl"}
        [:div {:class "flex items-center"}
         [icon-success]
         [:div {:class "py-4 text-white text-sm font-medium"}
-         (.-success flash)]]
+         (j/get flash :success)]]
        [button-close {:on-click #(setVisible false)
                       :color "green"}]]
 

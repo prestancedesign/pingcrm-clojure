@@ -168,7 +168,7 @@
       [:span {:class "mx-2 font-medium text-indigo-600"}
        "/"]
       (.-name data)]
-     (when-not (empty? (.-deleted_at organization))
+     (when-not (empty? (j/get organization :deleted_at))
        [trashed-message {:on-restore restore}
         "This organization has been deleted."])
      [:div {:class "max-w-3xl overflow-hidden bg-white rounded shadow"}
@@ -227,7 +227,7 @@
                      :value (.-postal_code data)
                      :on-change #(setData "postal_code" (.. % -target -value))}]]
        [:div {:class "flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200"}
-        (when (empty? (.-deleted_at organization))
+        (when (empty? (j/get organization :deleted_at))
           [delete-button {:on-delete destroy}
            "Delete Organization"])
         [loading-button {:loading processing
@@ -270,7 +270,7 @@
                              :class "flex items-center px-4"}
              [icon {:name :cheveron-right
                     :class "block w-6 h-6 text-gray-400 fill-current"}]]]])
-        (when (empty? (.-contacts organization))
+        (when (empty? (j/get organization :contacts))
           [:tr
            [:td {:class "px-6 py-4 border-t"
                  :col-span "4"}

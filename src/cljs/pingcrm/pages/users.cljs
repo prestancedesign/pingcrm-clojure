@@ -139,7 +139,7 @@
                         :href (js/route "users")} "Users"]
        [:span {:class "mx-2 font-medium text-indigo-400"} "/"]
        (.-first_name user) " " (.-last_name user)]]
-     (when-not (empty? (.-deleted_at user))
+     (when-not (empty? (j/get user :deleted_at))
        [trashed-message {:on-restore restore}
         "This user has been deleted."])
      [:div {:class "max-w-3xl overflow-hidden bg-white rounded shadow"}
@@ -180,7 +180,7 @@
          [:option {:value "0"} "No"]]]
        ;; TODO Add file input
        [:div {:class "flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200"}
-        (when (empty? (.-deleted_at user))
+        (when (empty? (j/get user :deleted_at))
           [delete-button {:on-delete destroy}
            "Delete User"])
         [loading-button {:loading processing
