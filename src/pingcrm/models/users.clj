@@ -36,8 +36,9 @@
   ;;TODO: Use with-open for better performance
   (let [user (sql/get-by-id db :users id)
         account-id (:account_id user)
-        account (sql/get-by-id db :accounts account-id {:columns [:id :name]})]
-    (assoc user :account account)))
+        account (sql/get-by-id db :accounts account-id {:columns [:id :name]})
+        sanitized-user (dissoc user :password)]
+    (assoc sanitized-user :account account)))
 
 (defn get-user-by-email
   [db email]
