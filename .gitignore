@@ -2,9 +2,11 @@
 /.nrepl-port
 /.shadow-cljs/
 /node_modules/
-/resources/public/js/cljs-runtime/
-/resources/public/js/manifest.edn
-/resources/public/js/*.js
-/resources/public/css/*.css
+/public/js/cljs-runtime/
+/public/js/manifest.edn
+/public/js/*.js
+/public/js/*.map
+/public/css/*.css
+/public/js/report.html
 /pingcrm.jar
-/resources/public/js/report.html
+*js.map

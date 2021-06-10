@@ -92,6 +92,6 @@
       ["/:contact-id/restore" {:put {:handler (contacts/restore-contact! db)}}]]]
     (config db))
    (ring/routes
-    (ring/create-resource-handler {:path "/"})
+    (ring/create-file-handler {:path "/"})
     (ring/create-default-handler
      {:not-found (constantly {:status 404, :body error/not-found})}))))
