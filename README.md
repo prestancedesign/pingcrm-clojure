@@ -20,7 +20,7 @@ Clone the repo locally:
 
 ### Build the front-end ###
 
-    npm install & npx shadow-cljs release app
+    npm install & npm run release
 
 ### Run the back-end  ###
 
@@ -31,11 +31,11 @@ You're ready to go! Open [http://localhost:3000](http://localhost:3000) and logi
 - **Username:** johndoe@example.com
 - **Password:** secret
 
-## Run the application for development
+## Run the application on development (REPL)
 
-### Run the front-end with hot reloading
+### Run the front-end with JS and CSS hot reloading
 
-    npx shadow-cljs watch app
+    npm run dev
 
 ### Run the back-end REPL
 
