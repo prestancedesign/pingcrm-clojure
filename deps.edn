@@ -1,4 +1,4 @@
-{:paths ["src" "resources"]
+{:paths ["src/clj" "resources"]
  :deps
  {metosin/reitit {:mvn/version "0.5.13"}
   com.github.prestancedesign/inertia-clojure {:mvn/version "0.2.2"}
