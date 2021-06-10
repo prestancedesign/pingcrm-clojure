@@ -12,5 +12,7 @@
    :output-dir "resources/public/js"
    :asset-path "/js"
    :modules {:app {:init-fn pingcrm.app/init!}}
+   :build-hooks
+   [(shadow.cljs.build-report/hook)]
    :devtools {:after-load pingcrm.app/mount-root
               :watch-dir "resources/public"}}}}
