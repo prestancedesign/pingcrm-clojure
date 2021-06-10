@@ -12,4 +12,5 @@
    :output-dir "resources/public/js"
    :asset-path "/js"
    :modules {:app {:init-fn pingcrm.app/init!}}
-   :devtools {:after-load pingcrm.app/mount-root}}}}
+   :devtools {:after-load pingcrm.app/mount-root
+              :watch-dir "resources/public"}}}}
