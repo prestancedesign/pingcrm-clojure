@@ -3,7 +3,8 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
     purge: ['./resources/public/js/app.js',
-            'src/pingcrm/templates/app.clj'],
+            'src/pingcrm/templates/app.clj',
+            'src/pingcrm/templates/404.clj'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
