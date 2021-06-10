@@ -1,0 +1,5 @@
+input, select, textarea, button, div, a {
+  &:focus, &:active {
+    outline: none;
+  }
+}
