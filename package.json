@@ -23,6 +23,7 @@
         "postcss": "^8.3.1",
         "postcss-cli": "^8.3.1",
         "postcss-import": "^14.0.2",
+        "postcss-nesting": "^8.0.1",
         "shadow-cljs": "^2.14.2",
         "tailwindcss": "^2.0.4"
     }
