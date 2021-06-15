@@ -11,6 +11,7 @@
   {:target :browser
    :output-dir "public/js"
    :asset-path "/js"
+   :module-hash-names true
    :modules {:app {:init-fn pingcrm.app/init!}}
    :build-hooks
    [(shadow.cljs.build-report/hook)]
