@@ -29,11 +29,13 @@
             "Users/Edit" users/edit})
 
 (defn app []
-  [:> App {:initial-page (.parse js/JSON (.. el -dataset -page))
-           :resolve-component (fn [name] (let [comp (r/reactify-component (get pages name))]
-                                          (when-not (= name "Auth/Login")
-                                            (set! (.-layout ^js comp) (fn [page] (r/as-element [layout page]))))
-                                          comp))}])
+  [:> App
+   {:initial-page (.parse js/JSON (.. el -dataset -page))
+    :resolve-component
+    (fn [name] (let [^js comp (r/reactify-component (get pages name))]
+                (when-not (= name "Auth/Login")
+                  (set! (.-layout comp) (fn [page] (r/as-element [layout page]))))
+                comp))}])
 
 (defn mount-root []
   (d/render [app] el))
