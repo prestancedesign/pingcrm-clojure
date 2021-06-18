@@ -1,7 +1,8 @@
-(ns pingcrm.shared.pagination)
+(ns pingcrm.shared.pagination
+  (:require [clojure.string :as str]))
 
-(defn pagination-links [uri current-page total per-page]
-  (let [uri (str uri "?page=")
+(defn pagination-links [uri query-string current-page total per-page]
+  (let [uri (str uri "?" (when query-string (str/replace query-string #"&page=.*" "")) "&page=")
         page-number (/ total per-page)
         previous-link {:url (when (> current-page 1) (str uri (dec current-page))) :label "&laquo; Previous" :active nil}
         next-link {:url (when (< current-page page-number) (str uri (inc current-page))) :label "Next &raquo;" :active nil}

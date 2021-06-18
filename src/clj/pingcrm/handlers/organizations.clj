@@ -11,15 +11,15 @@
 
 (defn index
   [db]
-  (fn [{:keys [params uri] :as request}]
+  (fn [{:keys [params query-string uri] :as request}]
     (let [filters (select-keys params [:search :trashed])
           page (get-in request [:parameters :query :page] 1)
           offset (* (dec page) 10)
-          count (:aggregate (db/count-organizations db))
+          count (:aggregate (first (db/retrieve-and-filter-organizations db filters)))
           organizations (db/retrieve-and-filter-organizations db filters offset)
           props {:organizations {:data organizations
                                  :current_page page
-                                 :links (pagination/pagination-links uri page count 10)}
+                                 :links (pagination/pagination-links uri query-string page count 10)}
                  :filters filters}]
       (inertia/render "Organizations/Index" props))))
 
