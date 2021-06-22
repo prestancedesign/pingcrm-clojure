@@ -5,6 +5,7 @@
 /public/js/cljs-runtime/
 /public/js/manifest.edn
 /public/js/*.js
+!/public/js/ziggy.js
 /public/js/*.map
 /public/css/*.css
 /public/js/report.html
