@@ -14,9 +14,10 @@
    [site-head {:title "Users"}]
    [:h1 {:class "mb-8 text-3xl font-bold"} "Users"]
    [:div {:class "flex items-center justify-between mb-6"}
-    [:f> search-filter]
+    ;; TODO: Fix search box for ssr
+    ;; [:f> search-filter]
     [:> InertiaLink {:class "btn-indigo focus:outline-none"
-                     :href (js/route "users.create")}
+                     :href "/users/create"}
      [:span "Create"]
      [:span {:class "hidden md:inline"} " User"]]]
    [:div {:class "overflow-x-auto bg-white rounded shadow"}
@@ -32,24 +33,24 @@
         [:tr {:class "hover:bg-gray-100 focus-within:bg-gray-100"
               :key id}
          [:td {:class "border-t"}
-          [:> InertiaLink {:href (js/route "users.edit" id)
+          [:> InertiaLink {:href (str "/users/" id "/edit")
                            :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
            name
            (when deleted_at
              [icon {:name :trash
                     :class "flex-shrink-0 w-3 h-3 ml-2 text-gray-400 fill-current"}])]]
          [:td {:class "border-t"}
-          [:> InertiaLink {:href (js/route "users.edit" id)
+          [:> InertiaLink {:href (str "/users/" id "/edit")
                            :tab-index "-1"
                            :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
            email]]
          [:td {:class "border-t"}
-          [:> InertiaLink {:href (js/route "users.edit" id)
+          [:> InertiaLink {:href (str "/users/" id "/edit")
                            :tab-index "-1"
                            :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
            (if owner "Owner" "User")]]
          [:td {:class "w-px border-t"}
-          [:> InertiaLink {:href (js/route "users.edit" id)
+          [:> InertiaLink {:href (str "/users/" id "/edit")
                            :tab-index "-1"
                            :class "flex items-center px-4 focus:outline-none"}
            [icon {:name :cheveron-right
@@ -68,11 +69,11 @@
                                 :password ""
                                 :owner "0"}))
         on-submit #(do (.preventDefault %)
-                       (post (js/route "users.store")))]
+                       (post "/users"))]
     [:div
      [site-head {:title "Create User"}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
-      [:> InertiaLink {:href (js/route "users")
+      [:> InertiaLink {:href "/users"
                        :class "text-indigo-400 hover:text-indigo-600"}
        "Users" [:span {:class "font-medium text-indigo-400"} " / "]]
       "Create"]
@@ -126,17 +127,17 @@
                                 :password (or (.-password user) "")
                                 :owner (or (if (.-owner user) "1" "0") "0")}))
         on-submit #(do (.preventDefault %)
-                       (post (js/route "users.update" (.-id user))))
+                       (post (str "/users/" (.-id user))))
         destroy #(when (js/confirm "Are you sure you want to delete this user?")
-                   (.delete Inertia (js/route "users.destroy" (.-id user))))
+                   (.delete Inertia (str "/users/" (.-id user))))
         restore #(when (js/confirm "Are you sure you want to restore this user?")
-                   (.put Inertia (js/route "users.restore" (.-id user))))]
+                   (.put Inertia (str "/users/" (.-id user) "/restore")))]
     [:<>
      [site-head {:title (str (j/get user :first_name) " " (j/get user :last_name))}]
      [:div {:class "flex justify-start max-w-lg mb-8"}
       [:h1 {:class "text-3xl font-bold"}
        [:> InertiaLink {:class "text-indigo-400 hover:text-indigo-700"
-                        :href (js/route "users")} "Users"]
+                        :href "/users"} "Users"]
        [:span {:class "mx-2 font-medium text-indigo-400"} "/"]
        (.-first_name user) " " (.-last_name user)]]
      (when-not (empty? (j/get user :deleted_at))

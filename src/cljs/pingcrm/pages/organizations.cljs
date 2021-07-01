@@ -17,10 +17,11 @@
      [site-head {:title "Organizations"}]
      [:h1 {:class "mb-8 text-3xl font-bold"} "Organizations"]
      [:div {:class "flex items-center justify-between mb-6"}
-      [:f> search-filter]
+      ;; TODO: Fix search box for ssr
+      ;; [:f> search-filter]
       [:> InertiaLink
        {:class "btn-indigo focus:outline-none",
-        :href (js/route "organizations.create")} [:span "Create "]
+        :href "/organizations/create"} [:span "Create "]
        [:span {:class "hidden md:inline"} "Organization"]]]
      [:div {:class "overflow-x-auto bg-white rounded shadow"}
       [:table {:class "w-full whitespace-nowrap"}
@@ -35,24 +36,24 @@
           [:tr {:class "hover:bg-gray-100 focus-within:bg-gray-100"
                 :key id}
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "organizations.edit" id)
+            [:> InertiaLink {:href (str "/organizations/" id "/edit")
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              name
              (when deleted_at
                [icon {:name :trash
                       :class "flex-shrink-0 w-3 h-3 ml-2 text-gray-400 fill-current"}])]]
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "organizations.edit" id)
+            [:> InertiaLink {:href (str "/organizations/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              city]]
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "organizations.edit" id)
+            [:> InertiaLink {:href (str "/organizations/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              phone]]
            [:td {:class "w-px border-t"}
-            [:> InertiaLink {:href (js/route "organizations.edit" id)
+            [:> InertiaLink {:href (str "/organizations/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-4 focus:outline-none"}
              [icon {:name :cheveron-right
@@ -75,11 +76,11 @@
                                 :country ""
                                 :postal_code ""}))
         on-submit #(do (.preventDefault %)
-                       (post (js/route "organizations.store")))]
+                       (post "/organizations"))]
     [:div
      [site-head {:title "Create Organization"}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
-      [:> InertiaLink {:href (js/route "organizations")
+      [:> InertiaLink {:href "/organizations"
                        :class "text-indigo-400 hover:text-indigo-600"}
        "Organizations"]
       [:span {:class ""} " / "]
@@ -155,15 +156,15 @@
                                 :country (or (.-country organization) "")
                                 :postal_code (or (.-postal_code organization) "")}))
         on-submit #(do (.preventDefault %)
-                       (put (js/route "organizations.update" (.-id organization))))
+                       (put (str "/organizations/" (.-id organization))))
         destroy #(when (js/confirm "Are you sure you want to delete this organization?")
-                   (.delete Inertia (js/route "organizations.destroy" (.-id organization))))
+                   (.delete Inertia (str "/organizations/" (.-id organization))))
         restore #(when (js/confirm "Are you sure you want to restore this organization?")
-                   (.put Inertia (js/route "organizations.restore" (.-id organization))))]
+                   (.put Inertia (str "/organizations/" (.-id organization) "/restore")))]
     [:div
      [site-head {:title (j/get organization :name)}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
-      [:> InertiaLink {:href (js/route "organizations")
+      [:> InertiaLink {:href "/organizations"
                        :class "text-indigo-600 hover:text-indigo-700"}
        "Organizations"]
       [:span {:class "mx-2 font-medium text-indigo-600"}
@@ -249,7 +250,7 @@
           [:tr {:class "hover:bg-gray-100 focus-within:bg-gray-100"
                 :key id}
            [:td.border-t
-            [:> InertiaLink {:href (js/route "contacts.edit" id)
+            [:> InertiaLink {:href (str "/contacts/" id "/edit")
                              :class "flex items-center px-6 py-4 focus:text-indigo focus:outline-none"}
              name
              (when deleted_at
@@ -257,17 +258,17 @@
                       :class "flex-shrink-0 w-3 h-3 ml-2 text-gray-400 fill-current"}])]]
            [:td.border-t
             [:> InertiaLink {:tab-index "-1"
-                             :href (js/route "contacts.edit" id)
+                             :href (str "/contacts/" id "/edit")
                              :class "flex items-center px-6 py-4 focus:text-indigo focus:outline-none"}
              city]]
            [:td.border-t
             [:> InertiaLink {:tab-index "-1"
-                             :href (js/route "contacts.edit" id)
+                             :href (str "/contacts/" id "/edit")
                              :class "flex items-center px-6 py-4 focus:text-indigo focus:outline-none"}
              phone]]
            [:td.border-t.w-px
             [:> InertiaLink {:tab-index "-1"
-                             :href (js/route "contacts.edit" id)
+                             :href (str "/contacts/" id "/edit")
                              :class "flex items-center px-4"}
              [icon {:name :cheveron-right
                     :class "block w-6 h-6 text-gray-400 fill-current"}]]]])

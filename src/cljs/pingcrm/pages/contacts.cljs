@@ -16,10 +16,11 @@
      [site-head {:title "Contacts"}]
      [:h1 {:class "mb-8 text-3xl font-bold"} "Contacts"]
      [:div {:class "flex items-center justify-between mb-6"}
-      [:f> search-filter]
+      ;; TODO: Fix search box for ssr
+      ;; [:f> search-filter]
       [:> InertiaLink
        {:class "btn-indigo focus:outline-none",
-        :href (js/route "contacts.create")} [:span "Create "]
+        :href "/contacts/create"} [:span "Create "]
        [:span {:class "hidden md:inline"} "Contact"]]]
      [:div {:class "overflow-x-auto bg-white rounded shadow"}
       [:table {:class "w-full whitespace-nowrap"}
@@ -35,29 +36,29 @@
           [:tr {:class "hover:bg-gray-100 focus-within:bg-gray-100"
                 :key id}
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "contacts.edit" id)
+            [:> InertiaLink {:href (str "/contacts/" id "/edit")
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              name
              (when deleted_at
                [icon {:name :trash
                       :class "flex-shrink-0 w-3 h-3 ml-2 text-gray-400 fill-current"}])]]
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "contacts.edit" id)
+            [:> InertiaLink {:href (str "/contacts/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              (when organization (j/get organization :name))]]
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "contacts.edit" id)
+            [:> InertiaLink {:href (str "/contacts/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              city]]
            [:td {:class "border-t"}
-            [:> InertiaLink {:href (js/route "contacts.edit" id)
+            [:> InertiaLink {:href (str "/contacts/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"}
              phone]]
            [:td {:class "w-px border-t"}
-            [:> InertiaLink {:href (js/route "contacts.edit" id)
+            [:> InertiaLink {:href (str "/contacts/" id "/edit")
                              :tab-index "-1"
                              :class "flex items-center px-4 focus:outline-none"}
              [icon {:name :cheveron-right
@@ -82,11 +83,11 @@
                                 :country ""
                                 :postal_code ""}))
         on-submit #(do (.preventDefault %)
-                       (post (js/route "contacts.store")))]
+                       (post "/contacts"))]
     [:div
      [site-head {:title "Create Contact"}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
-      [:> InertiaLink {:href (js/route "contacts")
+      [:> InertiaLink {:href "/contacts"
                        :class "text-indigo-400 hover:text-indigo-600"}
        "Contacts"]
       [:span {:class ""} " / "]
@@ -181,15 +182,15 @@
                                 :country (or (.-country contact) "")
                                 :postal_code (or (.-postal_code contact) "")}))
         on-submit #(do (.preventDefault %)
-                       (put (js/route "contacts.update" (.-id contact))))
+                       (put (str "/contacts/" (.-id contact))))
         destroy #(when (js/confirm "Are you sure you want to delete this contact?")
-                   (.delete Inertia (js/route "contacts.destroy" (.-id contact))))
+                   (.delete Inertia (str "/contacts/" (.-id contact))))
         restore #(when (js/confirm "Are you sure you want to restore this contact?")
-                   (.put Inertia (js/route "contacts.restore" (.-id contact))))]
+                   (.put Inertia (str "/contacts/" (.-id contact) "/restore")))]
     [:div
      [site-head {:title (str (j/get contact :first_name) " " (j/get contact :last_name))}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
-      [:> InertiaLink {:href (js/route "contacts")
+      [:> InertiaLink {:href "/contacts"
                        :class "text-indigo-600 hover:text-indigo-700"}
        "Contacts"]
       [:span {:class "mx-2 font-medium text-indigo-600"}
