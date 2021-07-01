@@ -16,4 +16,8 @@
    :build-hooks
    [(shadow.cljs.build-report/hook)]
    :devtools {:after-load pingcrm.app/mount-root
-              :watch-dir "public"}}}}
+              :watch-dir "public"}}
+  :ssr
+  {:target :node-script
+   :output-to "out/ssr.js"
+   :main pingcrm.ssr/init}}}
