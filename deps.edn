@@ -1,9 +1,10 @@
-{:paths ["src/clj" "resources" "public"]
+{:paths
+ ["src/clj" "resources" "public"]
+
  :deps
  {metosin/reitit {:mvn/version "0.5.13"}
   com.github.prestancedesign/inertia-clojure {:mvn/version "0.2.2"}
   hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
-  ring/ring-jetty-adapter {:mvn/version "1.9.3"}
   com.github.seancorfield/next.jdbc {:mvn/version "1.2.659"}
   org.xerial/sqlite-jdbc {:mvn/version "3.34.0"}
   com.github.seancorfield/honeysql {:mvn/version "2.0.0-rc2"}
@@ -11,12 +12,17 @@
   crypto-password/crypto-password {:mvn/version "0.3.0"}
   funcool/struct {:mvn/version "1.4.0"}
   integrant/integrant {:mvn/version "0.8.0"}
-  prismatic/schema {:mvn/version "1.1.12"}}
+  prismatic/schema {:mvn/version "1.1.12"}
+  http-kit/http-kit {:mvn/version "2.5.3"}
+  metosin/jsonista {:mvn/version "0.3.3"}}
+
  :aliases
  {:dev
   {:extra-paths ["dev/src"]
    :extra-deps {integrant/repl {:mvn/version "0.3.2"}}}
+
   :run {:main-opts ["-m" "pingcrm.system"]}
+
   :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
             :exec-fn hf.depstar/uberjar
             :exec-args {:aot true
