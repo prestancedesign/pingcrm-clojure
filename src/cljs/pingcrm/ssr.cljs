@@ -2,28 +2,10 @@
   (:require ["@inertiajs/inertia-react" :refer [App createInertiaApp]]
             ["express" :as express]
             [applied-science.js-interop :as j]
-            [pingcrm.pages.contacts :as contacts]
-            [pingcrm.pages.dashboard :as dashboard]
-            [pingcrm.pages.login :refer [login]]
-            [pingcrm.pages.organizations :as organizations]
-            [pingcrm.pages.reports :as reports]
-            [pingcrm.pages.users :as users]
+            [pingcrm.shared-pages :refer [pages]]
             [pingcrm.shared.layout :refer [layout]]
             [reagent.core :as r]
             [reagent.dom.server :as ssr]))
-
-(def pages {"Dashboard/Index" dashboard/index
-            "Auth/Login" login
-            "Reports/Index" reports/index
-            "Organizations/Index" organizations/index
-            "Organizations/Create" organizations/create
-            "Organizations/Edit" organizations/edit
-            "Contacts/Index" contacts/index
-            "Contacts/Create" contacts/create
-            "Contacts/Edit" contacts/edit
-            "Users/Index" users/index
-            "Users/Create" users/create
-            "Users/Edit" users/edit})
 
 (defn init []
   (let [port (or (.. js/process -env -PORT) 8000)]
