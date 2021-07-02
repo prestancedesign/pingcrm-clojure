@@ -1,5 +1,5 @@
 (ns pingcrm.ssr
-  (:require ["@inertiajs/inertia-react" :refer [App createInertiaApp]]
+  (:require ["@inertiajs/inertia-react" :refer [createInertiaApp]]
             ["express" :as express]
             [applied-science.js-interop :as j]
             [pingcrm.shared-pages :refer [pages]]
