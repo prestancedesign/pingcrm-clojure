@@ -16,8 +16,7 @@
      [site-head {:title "Contacts"}]
      [:h1 {:class "mb-8 text-3xl font-bold"} "Contacts"]
      [:div {:class "flex items-center justify-between mb-6"}
-      ;; TODO: Fix search box for ssr
-      ;; [:f> search-filter]
+      [:f> search-filter]
       [:> InertiaLink
        {:class "btn-indigo focus:outline-none",
         :href "/contacts/create"} [:span "Create "]

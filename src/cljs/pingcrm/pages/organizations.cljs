@@ -17,8 +17,7 @@
      [site-head {:title "Organizations"}]
      [:h1 {:class "mb-8 text-3xl font-bold"} "Organizations"]
      [:div {:class "flex items-center justify-between mb-6"}
-      ;; TODO: Fix search box for ssr
-      ;; [:f> search-filter]
+      [:f> search-filter]
       [:> InertiaLink
        {:class "btn-indigo focus:outline-none",
         :href "/organizations/create"} [:span "Create "]

@@ -14,8 +14,7 @@
    [site-head {:title "Users"}]
    [:h1 {:class "mb-8 text-3xl font-bold"} "Users"]
    [:div {:class "flex items-center justify-between mb-6"}
-    ;; TODO: Fix search box for ssr
-    ;; [:f> search-filter]
+    [:f> search-filter]
     [:> InertiaLink {:class "btn-indigo focus:outline-none"
                      :href "/users/create"}
      [:span "Create"]
