@@ -138,7 +138,7 @@
        [:> InertiaLink {:class "text-indigo-400 hover:text-indigo-700"
                         :href (js/route "users")} "Users"]
        [:span {:class "mx-2 font-medium text-indigo-400"} "/"]
-       (.-first_name user) " " (.-last_name user)]]
+       (.-first_name data) " " (.-last_name data)]]
      (when-not (empty? (j/get user :deleted_at))
        [trashed-message {:on-restore restore}
         "This user has been deleted."])
