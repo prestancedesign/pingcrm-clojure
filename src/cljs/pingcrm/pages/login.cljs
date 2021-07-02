@@ -7,10 +7,10 @@
             [pingcrm.shared.site-head :refer [site-head]]))
 
 (defn login-form []
-  (let [{:keys [data setData errors post processing]} (j/lookup
-                                                       (useForm #js {:email "johndoe@example.com"
-                                                                     :password "secret"
-                                                                     :remember false}))
+  (let [{:keys [data setData errors post processing]}
+        (j/lookup (useForm #js {:email "johndoe@example.com"
+                                :password "secret"
+                                :remember false}))
         on-submit #(do (.preventDefault %)
                        (post "/login"))]
     [:<>
