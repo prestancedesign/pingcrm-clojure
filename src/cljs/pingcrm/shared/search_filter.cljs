@@ -18,14 +18,17 @@
                      (when opened? (set-opened false)))
         reset #(set-values {:search ""
                             :role ""
-                            :trashed ""})]
+                            :trashed ""})
+        initial-render (react/useRef true)]
 
     (react/useEffect
      (fn []
-       (let [query (into {} (filter (comp not-empty val) values))
-             options #js {:replace true
-                          :preserveState true}]
-         (.get Inertia (.. js/window -location -pathname) (clj->js query) options)))
+       (if (.-current initial-render)
+         (set! (.-current initial-render) false)
+         (let [query (into {} (filter (comp not-empty val) values))
+               options #js {:replace true
+                            :preserveState true}]
+           (.get Inertia (.. js/window -location -pathname) (clj->js query) options))))
      #js [values])
 
     [:div {:class "flex items-center w-full max-w-md mr-4"}
