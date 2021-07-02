@@ -166,8 +166,7 @@
       [:> InertiaLink {:href "/organizations"
                        :class "text-indigo-600 hover:text-indigo-700"}
        "Organizations"]
-      [:span {:class "mx-2 font-medium text-indigo-600"}
-       "/"]
+      [:span {:class "mx-2 font-medium text-indigo-600"} "/"]
       (.-name data)]
      (when-not (empty? (j/get organization :deleted_at))
        [trashed-message {:on-restore restore}
