@@ -12,7 +12,7 @@
                                                                      :password "secret"
                                                                      :remember false}))
         on-submit #(do (.preventDefault %)
-                       (post (js/route "login.store")))]
+                       (post "/login"))]
     [:<>
      [site-head {:title "Login"}]
      [:div {:class "p-6 bg-indigo-800 min-h-screen flex justify-center items-center"}

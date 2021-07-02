@@ -3,14 +3,14 @@
             ["@inertiajs/inertia-react" :refer [usePage]]
             [applied-science.js-interop :as j]
             [goog.functions :refer [throttle]]
-            [pingcrm.shared.form-input :refer [text-input select-input]]
+            [pingcrm.shared.form-input :refer [select-input]]
             [reagent.core :as r]))
 
 (defn filters-query [values]
   (let [query (into {} (filter (comp not-empty val) values))
         options #js {:replace true
                      :preserveState true}]
-    (.get Inertia (.current (js/route)) (clj->js query) options)))
+    (.get Inertia (.. js/window -location -pathname) (clj->js query) options)))
 
 (defn search-filter []
   (let [{:keys [filters]} (j/lookup (.-props (usePage)))
