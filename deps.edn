@@ -3,11 +3,11 @@
 
  :deps
  {metosin/reitit {:mvn/version "0.5.13"}
-  com.github.prestancedesign/inertia-clojure {:mvn/version "0.2.2"}
+  com.github.prestancedesign/inertia-clojure {:mvn/version "0.2.3"}
   hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
-  com.github.seancorfield/next.jdbc {:mvn/version "1.2.659"}
-  org.xerial/sqlite-jdbc {:mvn/version "3.34.0"}
-  com.github.seancorfield/honeysql {:mvn/version "2.0.0-rc2"}
+  com.github.seancorfield/next.jdbc {:mvn/version "1.2.674"}
+  org.xerial/sqlite-jdbc {:mvn/version "3.36.0.1"}
+  com.github.seancorfield/honeysql {:mvn/version "2.0.0-rc3"}
   buddy/buddy-auth {:mvn/version "3.0.1"}
   crypto-password/crypto-password {:mvn/version "0.3.0"}
   funcool/struct {:mvn/version "1.4.0"}
@@ -23,7 +23,7 @@
 
   :run {:main-opts ["-m" "pingcrm.system"]}
 
-  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
+  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.245"}}
             :exec-fn hf.depstar/uberjar
             :exec-args {:aot true
                         :jar "pingcrm.jar"
