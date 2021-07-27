@@ -1,10 +1,9 @@
 (ns pingcrm.pages.login
-  (:require ["@inertiajs/inertia-react" :refer [useForm]]
+  (:require ["@inertiajs/inertia-react" :refer [useForm Head]]
             [applied-science.js-interop :as j]
             [pingcrm.shared.buttons :refer [loading-button]]
             [pingcrm.shared.form-input :refer [text-input]]
-            [pingcrm.shared.logo :refer [logo]]
-            [pingcrm.shared.site-head :refer [site-head]]))
+            [pingcrm.shared.logo :refer [logo]]))
 
 (defn login-form []
   (let [{:keys [data setData errors post processing]}
@@ -14,7 +13,7 @@
         on-submit #(do (.preventDefault %)
                        (post "/login"))]
     [:<>
-     [site-head {:title "Login"}]
+     [:> Head {:title "Login"}]
      [:div {:class "p-6 bg-indigo-800 min-h-screen flex justify-center items-center"}
       [:div {:class "w-full max-w-md"}
        [logo {:class "block mx-auto w-full max-w-xs fill-white" :height "50"}]
