@@ -1,9 +1,9 @@
 (ns pingcrm.pages.dashboard
-  (:require [pingcrm.shared.site-head :refer [site-head]]))
+  (:require ["@inertiajs/inertia-react" :refer [Head]]))
 
 (defn index []
   [:<>
-   [site-head {:title "Dashboard"}]
+   [:> Head {:title "Dashboard"}]
    [:div [:h1.mb-8.font-bold.text-3xl "Dashboard"]
     [:p.mb-8.leading-normal "Hey there! Welcome to the " [:b "Clojure / ClojureScript Reagent"]
      " version of Ping CRM, a demo app designed to help illustrate how "

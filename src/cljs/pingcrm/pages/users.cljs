@@ -1,17 +1,16 @@
 (ns pingcrm.pages.users
   (:require ["@inertiajs/inertia" :refer [Inertia]]
-            ["@inertiajs/inertia-react" :refer [InertiaLink useForm]]
+            ["@inertiajs/inertia-react" :refer [InertiaLink useForm Head]]
             [applied-science.js-interop :as j]
             [pingcrm.shared.buttons :refer [loading-button delete-button]]
             [pingcrm.shared.form-input :refer [text-input select-input]]
             [pingcrm.shared.icon :refer [icon]]
             [pingcrm.shared.search-filter :refer [search-filter]]
-            [pingcrm.shared.site-head :refer [site-head]]
             [pingcrm.shared.trashed-message :refer [trashed-message]]))
 
 (defn index [{:keys [users]}]
   [:div
-   [site-head {:title "Users"}]
+   [:> Head {:title "Users"}]
    [:h1 {:class "mb-8 text-3xl font-bold"} "Users"]
    [:div {:class "flex items-center justify-between mb-6"}
     [:f> search-filter]
@@ -70,7 +69,7 @@
         on-submit #(do (.preventDefault %)
                        (post (js/route "users.store")))]
     [:div
-     [site-head {:title "Create User"}]
+     [:> Head {:title "Create User"}]
      [:h1 {:class "mb-8 text-3xl font-bold"}
       [:> InertiaLink {:href (js/route "users")
                        :class "text-indigo-400 hover:text-indigo-600"}
@@ -132,7 +131,7 @@
         restore #(when (js/confirm "Are you sure you want to restore this user?")
                    (.put Inertia (js/route "users.restore" (.-id user))))]
     [:<>
-     [site-head {:title (str (j/get user :first_name) " " (j/get user :last_name))}]
+     [:> Head {:title (str (j/get user :first_name) " " (j/get user :last_name))}]
      [:div {:class "flex justify-start max-w-lg mb-8"}
       [:h1 {:class "text-3xl font-bold"}
        [:> InertiaLink {:class "text-indigo-400 hover:text-indigo-700"
