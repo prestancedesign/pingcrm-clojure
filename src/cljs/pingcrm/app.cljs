@@ -13,7 +13,8 @@
   (createInertiaApp
    #js {:resolve (fn [name]
                    (let [^js comp (r/reactify-component (get pages name))]
-                     (set! (.-layout comp) (fn [page] (r/as-element [layout page])))
+                     (when-not (= name "Auth/Login")
+                       (set! (.-layout comp) (fn [page] (r/as-element [layout page]))))
                      comp))
         :title (fn [title] (str title " | Ping CRM"))
         :setup (j/fn [^:js {:keys [el App props]}]
