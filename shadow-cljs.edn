@@ -15,5 +15,5 @@
    :modules {:app {:init-fn pingcrm.app/init!}}
    :build-hooks
    [(shadow.cljs.build-report/hook)]
-   :devtools {:after-load pingcrm.app/mount-root
+   :devtools {:after-load pingcrm.app/start
               :watch-dir "public"}}}}
