@@ -1,5 +1,6 @@
 (ns pingcrm.app
-  (:require ["@inertiajs/inertia-react" :refer [createInertiaApp]]
+  (:require ["@inertiajs/inertia" :refer [Inertia]]
+            ["@inertiajs/inertia-react" :refer [createInertiaApp]]
             ["@inertiajs/progress" :refer [InertiaProgress]]
             [applied-science.js-interop :as j]
             [pingcrm.shared-pages :refer [pages]]
@@ -9,7 +10,7 @@
 
 (.init InertiaProgress)
 
-(defn start []
+(defn init! []
   (createInertiaApp
    #js {:resolve (fn [name]
                    (let [^js comp (r/reactify-component (get pages name))]
@@ -20,5 +21,5 @@
         :setup (j/fn [^:js {:keys [el App props]}]
                  (d/render (r/as-element [:f> App props]) el))}))
 
-(defn init! []
-  (start))
+(defn ^:dev/after-load reload []
+  (.reload Inertia))
