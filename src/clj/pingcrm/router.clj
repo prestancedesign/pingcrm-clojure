@@ -27,7 +27,7 @@
 
 (def backend (backends/session))
 
-(def cookie-store-secret "x&Hvnhx7BqYalmQr")
+(def cookie-store-secret (byte-array 16))
 
 (defn config [db]
   {:conflicts nil
