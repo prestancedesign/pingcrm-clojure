@@ -3,8 +3,8 @@
  ["src/cljs"]
 
  :dependencies
- [[reagent "1.1.0"]
-  [applied-science/js-interop "0.2.11"]]
+ [[reagent "1.1.1"]
+  [applied-science/js-interop "0.3.3"]]
 
  :builds
  {:app
